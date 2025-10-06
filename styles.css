@@ -2201,3 +2201,75 @@ html[dir="rtl"] .kid-row{ direction: rtl; }
   html[dir="rtl"] { direction: rtl; }
   html[dir="rtl"] .menu, html[dir="rtl"] .navbar { text-align: right; }
 }
+
+/* ===================== PATCH MOBILE (<=768px) ===================== */
+@media (max-width: 768px) {
+
+  /* 1) Accueil : "Natanel & Ora" PLUS GRAND */
+  .hero h1,
+  .hero .title,
+  .hero .names,
+  .hero .couple-name {
+    font-size: clamp(34px, 12vw, 56px);
+    line-height: 1.1;
+    letter-spacing: .02em;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+
+  /* 1bis) Compte à rebours PLUS PETIT et sur UNE SEULE LIGNE */
+  .countdown {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    align-items: stretch;
+  }
+  .countdown .pill { padding: 10px 8px; border-radius: 14px; }
+  .countdown .number { font-size: clamp(18px, 7.5vw, 26px); line-height: 1; }
+  .countdown .label  { font-size: clamp(11px, 3.5vw, 14px); letter-spacing: .06em; text-transform: uppercase; }
+  .countdown .number, .countdown .label { white-space: nowrap; } /* évite le retour à la ligne */
+
+  /* 2) Logo sous l’arc : LÉGÈREMENT PLUS GRAND */
+  .logo,
+  img.logo,
+  .brand-logo {
+    width: clamp(140px, 44vw, 200px);
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-inline: auto;
+  }
+
+  /* 2bis) Titre "HOUPPA & SOIRÉE" LÉGÈREMENT PLUS PETIT */
+  #houppa h2, #soiree h2,
+  .title-houppa, .title-soiree,
+  .section-title {
+    font-size: clamp(18px, 5vw, 22px);
+    letter-spacing: .08em;
+  }
+
+  /* 3) Noms des parents : sur la MÊME LIGNE (hatan à gauche, kala à droite) */
+  /* 📝 Mets class="parents" autour des deux colonnes, et class="hatan"/"kala" sur chaque bloc */
+  .parents, .parents-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    align-items: start;
+  }
+  .parents .hatan, .parents-grid .hatan { text-align: left; }
+  .parents .kala,  .parents-grid .kala  { text-align: right; }
+
+  /* 4) Texte de la carte : un peu PLUS D’ESPACE (moins condensé) */
+  .invitation, .invitation-card, .card-text, .carte {
+    max-width: 98vw;
+    padding-inline: clamp(12px, 4vw, 20px);
+  }
+  .invitation p, .carte p { line-height: 1.55; }
+
+  /* 5) Nom "Natanel & Ora" (au centre de la carte) LÉGÈREMENT PLUS GRAND */
+  .names-center, .names-large, .noms-centre, .couple-name-center {
+    font-size: clamp(26px, 9vw, 36px);
+    line-height: 1.1;
+    text-align: center;
+  }
+}
