@@ -309,6 +309,40 @@
     line-height: 1.1;
   }
 }
+/* ======= MOBILE — parents + texte carte plus élégant ======= */
+@media (max-width: 768px){
+
+  /* 1) rapprocher un peu du bord pour aérer le centre */
+  #houppa-soiree .paper-inner.container{
+    padding-inline: clamp(6px, 2.6vw, 12px);
+  }
+
+  /* 2) parents en deux colonnes plus “compacts”, moins effet liste */
+  #houppa-soiree .parents-grid{
+    display:grid;
+    grid-template-columns: minmax(0,1fr) minmax(0,1fr); /* largeur max des 2 colonnes */
+    column-gap: clamp(8px, 3vw, 16px);
+    align-items:start;
+  }
+  #houppa-soiree .parents-grid .col{
+    font-size: clamp(14px, 3.8vw, 17px);
+    line-height: 1.35;              /* resserre la hauteur de ligne */
+  }
+  #houppa-soiree .parents-grid .line{
+    margin: 4px 0;                  /* réduit l’écart entre lignes */
+    text-wrap: balance;             /* casse les lignes joliment (Chrome/Edge/Safari récents) */
+  }
+  #houppa-soiree .parents-grid .hatan{ text-align:left;  padding-right: 2px; }
+  #houppa-soiree .parents-grid .kala{  text-align:right; padding-left:  2px; }
+
+  /* 3) texte “Remercient Hachem…” : moins condensé et mieux équilibré */
+  #houppa-soiree .invitation-text{
+    max-width: 96vw !important;     /* utilise plus de largeur */
+    padding-inline: clamp(4px, 2.4vw, 10px);
+    line-height: 1.55;
+    text-wrap: balance;             /* équilibre les retours à la ligne */
+  }
+}
 
   </style>
 </head>
