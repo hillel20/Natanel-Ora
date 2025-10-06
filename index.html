@@ -158,6 +158,84 @@
       #namesInline .script{ font-size: clamp(42px, 10vw, 58px); }
       #namesInline .amp{ font-size: clamp(22px, 5vw, 34px); }
     }
+    /* ================== PATCH MOBILE SPÉCIFIQUE (<=768px) ================== */
+@media (max-width: 768px){
+
+  /* 1) Header : logo plus petit (tu ne voulais pas le modifier) */
+  header .logo{
+    width: 56px;
+    height: auto;
+  }
+
+  /* 2) Accueil : fond plein écran sans bandes blanches */
+  #accueil{ position: relative; overflow: hidden; }
+  #accueil .hero-bg{
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center;
+    z-index: -1;
+  }
+  #accueil .overlay{ padding: 24px 16px; }
+
+  /* 3) Titre "Natanel & Ora" plus grand (et on force la priorité) */
+  #accueil h1.names.names-font{
+    font-size: clamp(44px, 12.5vw, 68px) !important;
+    line-height: 1.06;
+    text-align: center;
+  }
+
+  /* 4) Compte à rebours : 4 colonnes sur 1 ligne (pas de wrap) */
+  #accueil #countdown{
+    display: grid !important; /* force grid même si flex ailleurs */
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    justify-items: stretch;
+    align-items: stretch;
+  }
+  #accueil #countdown .compteur-bloc{
+    min-width: 0;
+    padding: 10px 8px;
+    border-radius: 12px;
+  }
+  #accueil #countdown .nombre{
+    font-size: clamp(18px, 7vw, 22px);
+    line-height: 1;
+    white-space: nowrap;
+  }
+  #accueil #countdown .label{
+    font-size: clamp(11px, 3.3vw, 13px);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* 5) Section Houppa & Soirée : fond plein écran */
+  #houppa-soiree{ position: relative; overflow: hidden; }
+  #houppa-soiree .paper-bg{
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center;
+    z-index: -1;
+  }
+
+  /* 5bis) Monogramme sous l’arc : un poil plus discret (si trop grand) */
+  #houppa-soiree .middle-logo{
+    width: clamp(120px, 36vw, 160px);
+    height: auto; display: block; margin-inline: auto;
+  }
+
+  /* 6) RSVP : supprimer les bandes blanches latérales */
+  #formulaire{
+    position: relative; overflow: hidden;
+    background: url("bg-floral.jpeg") center/cover no-repeat;
+  }
+  .form-container{ width: 100%; box-sizing: border-box; padding-inline: 16px; }
+
+  /* Sécurité : pas de marge latérale qui crée des bandes */
+  body{ margin:0; }
+  section{ margin-left: 0; margin-right: 0; }
+}
+
   </style>
 </head>
 
