@@ -282,6 +282,33 @@
   /* 6) Monogramme sous l’arc un peu plus discret */
   #houppa-soiree .middle-logo{ width:clamp(120px, 36vw, 160px); height:auto; display:block; margin-inline:auto; }
 }
+/* ====== MOBILE: agrandir titres FR + HE ====== */
+@media (max-width: 768px){
+
+  /* Accueil : "Natanel & Ora" (H1) nettement plus grand */
+  #accueil h1.names.names-font{
+    font-size: clamp(56px, 16vw, 88px) !important;
+    line-height: 1.06;
+    margin-bottom: 10px !important; /* évite de pousser le compteur */
+    text-align:center;
+  }
+
+  /* Carte (prénoms au centre) : FR plus grand */
+  #namesInline .script{
+    font-size: clamp(48px, 12vw, 76px) !important;
+    line-height: .95;
+  }
+  /* Le “&” au milieu, un peu plus grand aussi */
+  #namesInline .amp{
+    font-size: clamp(24px, 7vw, 40px) !important;
+  }
+
+  /* Carte : lignes en hébreu sous les prénoms (נתנאל / מרים) plus grandes */
+  #namesInline .under{
+    font-size: clamp(16px, 5vw, 22px) !important;
+    line-height: 1.1;
+  }
+}
 
   </style>
 </head>
