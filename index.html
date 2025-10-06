@@ -235,6 +235,53 @@
   body{ margin:0; }
   section{ margin-left: 0; margin-right: 0; }
 }
+/* ================= FIX MOBILE : full-bleed + titre + compteur ================= */
+@media (max-width: 768px){
+
+  /* 0) Plus de marges latérales globales (cause des bandes blanches) */
+  body{ padding-left:0 !important; padding-right:0 !important; margin:0; overflow-x:hidden; }
+
+  /* 1) Sections plein écran (pas de “gouttières”) */
+  #accueil, #houppa-soiree, #formulaire { width:100%; margin:0; position:relative; overflow:hidden; }
+
+  /* 2) Fonds en cover sur toute la section */
+  #accueil .hero-bg,
+  #houppa-soiree .paper-bg{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    object-fit:cover; object-position:center;
+    z-index:-1;
+  }
+  /* RSVP : même fond pour éviter les côtés blancs */
+  #formulaire{
+    background: url("bg-floral.jpeg") center/cover no-repeat !important;
+  }
+
+  /* 3) Logo du header : plus petit (tu ne voulais pas le changer) */
+  header .logo{ width:48px; height:auto; }
+
+  /* 4) Titre d’accueil plus grand */
+  #accueil h1.names.names-font{
+    font-size: clamp(48px, 13vw, 72px) !important;
+    line-height:1.06; text-align:center;
+  }
+
+  /* 5) Compteur : 4 colonnes sur 1 seule ligne (plus compact) */
+  #accueil #countdown{
+    display:grid !important;
+    grid-template-columns: repeat(4, 1fr);
+    gap:8px;
+    width:100%;
+    padding-inline:12px; /* donne un peu d'air sans recréer de bandes */
+    justify-items:stretch; align-items:stretch;
+  }
+  #accueil #countdown .compteur-bloc{ min-width:0; padding:10px 8px; border-radius:12px; }
+  #accueil #countdown .nombre{ font-size:clamp(18px, 6.5vw, 22px); line-height:1; white-space:nowrap; }
+  #accueil #countdown .label{ font-size:clamp(10px, 3.2vw, 12px); letter-spacing:.06em; text-transform:uppercase; white-space:nowrap; }
+
+  /* 6) Monogramme sous l’arc un peu plus discret */
+  #houppa-soiree .middle-logo{ width:clamp(120px, 36vw, 160px); height:auto; display:block; margin-inline:auto; }
+}
 
   </style>
 </head>
