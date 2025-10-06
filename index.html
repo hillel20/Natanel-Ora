@@ -2,7 +2,7 @@
 <html lang="fr" data-lang="fr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Natanel & Ora — Invitation</title>
   <meta name="description" content="Invitation au mariage de Natanël & Ora — 7 janvier 2026 (19 Tevet 5786)" />
 
@@ -37,13 +37,12 @@
       margin:.8rem auto 0;text-align:center;flex-wrap:wrap;
     }
     .names-calligraphy .script {
-  font-family: "Great Vibes", cursive;
-  font-size: clamp(46px, 8vw, 110px);
-  line-height: .9;
-  color: var(--primary-color); /* <-- même couleur que les chiffres */
-  text-shadow: 0 1px 1px rgba(255,255,255,.6);
-}
-
+      font-family: "Great Vibes", cursive;
+      font-size: clamp(46px, 8vw, 110px);
+      line-height: .9;
+      color: var(--primary-color);
+      text-shadow: 0 1px 1px rgba(255,255,255,.6);
+    }
     .names-calligraphy .amp{
       font-family:"Playfair Display",serif;font-weight:700;color:#7d5d3a;
       font-size:clamp(22px,3.5vw,36px);margin:0 .15em .15em;
@@ -67,42 +66,98 @@
     .bzh{margin-right:.25em}
 
     /* Uniformiser bouton Waze avec style Agenda */
-.btn-houppa.waze-button {
-  background: var(--primary-color);
-  color: white;
-  font-family: 'Playfair Display', serif;
-  font-size: 15px;
-  padding: 10px 22px;
-  border-radius: 8px;
-  text-decoration: none;
-  display: inline-block;
-  transition: all 0.3s ease;
-}
+    .btn-houppa.waze-button {
+      background: var(--primary-color);
+      color: white;
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      padding: 10px 22px;
+      border-radius: 8px;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+    .btn-houppa.waze-button:hover {
+      background: #9a6e3f;
+      transform: translateY(-2px);
+    }
 
-.btn-houppa.waze-button:hover {
-  background: #9a6e3f; /* un doré un peu plus foncé */
-  transform: translateY(-2px);
-}
-/* Noms dans la carte (plus compacts que le H1 d’accueil) */
-.names-calligraphy.in-card {
-  margin: .6rem auto .2rem;
-  gap: 14px;
-}
-.names-calligraphy.in-card .script {
-  font-size: clamp(38px, 7vw, 92px);
-  line-height: .9;
-}
-.names-calligraphy.in-card .amp {
-  font-size: clamp(20px, 4.5vw, 40px);
-}
+    /* Noms dans la carte (plus compacts que le H1 d’accueil) */
+    .names-calligraphy.in-card { margin: .6rem auto .2rem; gap: 14px; }
+    .names-calligraphy.in-card .script { font-size: clamp(38px, 7vw, 92px); line-height: .9; }
+    .names-calligraphy.in-card .amp { font-size: clamp(20px, 4.5vw, 40px); }
 
-/* En mode hébreu: police hébraïque pour les prénoms du bloc carte */
-.he-mode .names-calligraphy.in-card .script {
-  font-family: "Noto Serif Hebrew", serif;
-  font-weight: 600;
-}
+    /* En mode hébreu: police hébraïque pour les prénoms du bloc carte */
+    .he-mode .names-calligraphy.in-card .script { font-family: "Noto Serif Hebrew", serif; font-weight: 600; }
 
+    /* ===================== PATCH MOBILE (<=768px) ===================== */
+    @media (max-width: 768px) {
 
+      /* 1) Accueil : "Natanel & Ora" PLUS GRAND */
+      #accueil .names.names-font{
+        font-size: clamp(42px, 12vw, 64px);
+        line-height: 1.05;
+        text-align:center;
+      }
+
+      /* 1bis) Compte à rebours PLUS PETIT et sur UNE LIGNE */
+      #accueil #countdown{
+        display:grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap:10px;
+        align-items:stretch;
+        justify-items:center;
+      }
+      #accueil #countdown .compteur-bloc{
+        min-width:0;
+        padding:8px 6px;
+        border-radius:12px;
+      }
+      #accueil #countdown .nombre{
+        font-size: clamp(18px, 7.2vw, 24px);
+        line-height:1;
+        white-space:nowrap;
+      }
+      #accueil #countdown .label{
+        font-size: clamp(11px, 3.5vw, 13px);
+        letter-spacing:.06em;
+        text-transform:uppercase;
+        white-space:nowrap;
+      }
+
+      /* 2) Logo sous l’arc : LÉGÈREMENT PLUS GRAND */
+      #houppa-soiree .middle-logo{
+        width: clamp(140px, 44vw, 200px);
+        height:auto; display:block; margin-inline:auto;
+      }
+
+      /* 2bis) "HOUPPA & SOIRÉE" LÉGÈREMENT PLUS PETIT */
+      #houppa_title.script-title{
+        font-size: clamp(18px, 5vw, 22px);
+        letter-spacing:.08em;
+      }
+
+      /* 3) Parents : deux colonnes / hatan à gauche, kala à droite */
+      #houppa-soiree .parents-grid{
+        display:grid;
+        grid-template-columns: 1fr 1fr;
+        gap:12px;
+        align-items:start;
+      }
+      #houppa-soiree .parents-grid .hatan{ text-align:left; }
+      #houppa-soiree .parents-grid .kala{  text-align:right; }
+
+      /* 4) Texte de la carte : moins condensé */
+      .invitation-text{
+        max-width: 98vw !important;
+        padding-inline: clamp(12px, 4vw, 20px);
+        line-height: 1.55;
+      }
+
+      /* 5) Noms au centre de la carte : un poil plus grand */
+      #namesInline .script{ font-size: clamp(42px, 10vw, 58px); }
+      #namesInline .amp{ font-size: clamp(22px, 5vw, 34px); }
+    }
   </style>
 </head>
 
@@ -162,80 +217,74 @@
     <div class="paper-inner container">
 
       <!-- Parents -->
-<!-- PARENTS + GRANDS-PARENTS EN 3 LIGNES DE CHAQUE CÔTÉ -->
-<div class="parents-grid" data-aos="fade-up" data-aos-duration="900">
-  <div class="col">
-    <div class="line">Mr &amp; Mme Dov et Sarah Harrouch</div>
-    <div class="line">Mr Michel Harrouch</div>
-    <div class="line">Mme Aline Temim</div>
-  </div>
-
-  <div class="col">
-    <div class="line">Mr &amp; Mme Yossef et Nathalie Besnainou</div>
-    <div class="line">Mr &amp; Mme Adolphe Mahlouf &amp; Mireille Tapiero</div>
-    <div class="line"> Mme Jasmine Besnainou</div>
-  </div>
-</div>
-<!-- Texte de remerciement (haut) -->
-<p class="invitation-text invitation-top" data-aos="fade-up" data-aos-duration="900" style="max-width:960px;margin:1rem auto 0;text-align:center;">
-  Remercient <strong>Hachem</strong> d’avoir la joie de vous convier <br>
-  au mariage de leurs enfants et petits-enfants,
-</p>
-
-<!-- Prénoms calligraphiés (centre de carte) -->
-<div id="namesInline" class="names-calligraphy" data-aos="zoom-in" data-aos-duration="800">
-  <span id="namesInlineBride" class="name-left script">
-    Natanel
-    <span class="under he-only">נתנאל</span>
-  </span>
-  <span id="namesInlineAnd" class="amp">&amp;</span>
-  <span id="namesInlineGroom" class="name-right script">
-    Ora
-    <span class="under he-only">מרים</span>
-  </span>
-</div>
-
-<!-- Suite de la phrase (bas) -->
-<p class="invitation-text invitation-bottom" data-aos="fade-up" data-aos-duration="900" style="max-width:960px;margin:.4rem auto 0;text-align:center;">
-  à la <strong>Houppa</strong> qui aura lieu le
-  <span class="accent"><strong>7 janvier 2026</strong></span>
-  à <span class="accent"><strong>18h45 précise</strong></span>.
-</p>
-
-<!-- Phrase “Ainsi qu’à la réception…” : garder en dehors pour que le JS la traduise -->
-<p id="receptionLine" class="hp" data-aos="fade-up" data-aos-duration="900" data-aos-delay="720" style="text-align:center;">
-  Ainsi qu’à la réception qui suivra.
-</p>
-
-
-        <!-- Lieu (hébreu) -->
-        <p class="hp place rtl" data-aos="fade-up" data-aos-duration="900" data-aos-delay="520">
-        אמרלד —הגן השקוף בית שמש, ישראל
-       </p>
-       <!-- Réception --> <p class="hp" data-aos="fade-up" data-aos-duration="900" data-aos-delay="720"> </p>
-        <!-- Horaires -->
-        <p class="hp timings italic" data-aos="fade-up" data-aos-duration="900" data-aos-delay="600">
-          <span class="accent">Kabalat Panim à 17h45</span>,
-          <span class="accent">Houppa à 18h45 précise</span>
-        </p>
-
-        <!-- Réception -->
-
-
-        <!-- Dédicace (petit) -->
-        <p class="hp dedic small" data-aos="fade-up" data-aos-duration="900" data-aos-delay="820">
-          Une pensée particulière pour nos chers grand parents : <br> Mme&nbsp;Ruth&nbsp;Harrouch, M.&nbsp;Serge&nbsp;Yossef&nbsp;Temim, et M.&nbsp;Samuel&nbsp;Haim&nbsp;Besnainou.
-        </p>
-
-        <!-- Boutons -->
-        <div class="btn-event" style="margin-top:18px;" data-aos="fade-up" data-aos-duration="900" data-aos-delay="920">
-          <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Mariage+de+Natanël+%26+Ora&dates=20260107T164500Z/20260107T220000Z&details=Houppa+%C3%A0+18h45+pr%C3%A9cise,+Kabalat+Panim+%C3%A0+17h45&location=אמרלד+—+הגן+השקוף,+בית+שמש,+Isra%C3%ABl&sf=true&output=xml" 
-   target="_blank" 
-   class="btn-houppa calendar-button">
-   📅 Ajouter au calendrier
-</a>
-          <a class="btn-houppa waze-button" id="wazeBtn" href="https://ul.waze.com/ul?ll=31.7400%2C34.9880&navigate=yes" target="_blank" rel="noopener">Ouvrir dans Waze</a>
+      <!-- PARENTS + GRANDS-PARENTS EN 3 LIGNES DE CHAQUE CÔTÉ -->
+      <div class="parents-grid" data-aos="fade-up" data-aos-duration="900">
+        <div class="col hatan">
+          <div class="line">Mr &amp; Mme Dov et Sarah Harrouch</div>
+          <div class="line">Mr Michel Harrouch</div>
+          <div class="line">Mme Aline Temim</div>
         </div>
+
+        <div class="col kala">
+          <div class="line">Mr &amp; Mme Yossef et Nathalie Besnainou</div>
+          <div class="line">Mr &amp; Mme Adolphe Mahlouf &amp; Mireille Tapiero</div>
+          <div class="line">Mme Jasmine Besnainou</div>
+        </div>
+      </div>
+
+      <!-- Texte de remerciement (haut) -->
+      <p class="invitation-text invitation-top" data-aos="fade-up" data-aos-duration="900" style="max-width:960px;margin:1rem auto 0;text-align:center;">
+        Remercient <strong>Hachem</strong> d’avoir la joie de vous convier <br>
+        au mariage de leurs enfants et petits-enfants,
+      </p>
+
+      <!-- Prénoms calligraphiés (centre de carte) -->
+      <div id="namesInline" class="names-calligraphy" data-aos="zoom-in" data-aos-duration="800">
+        <span id="namesInlineBride" class="name-left script">
+          Natanel
+          <span class="under he-only">נתנאל</span>
+        </span>
+        <span id="namesInlineAnd" class="amp">&amp;</span>
+        <span id="namesInlineGroom" class="name-right script">
+          Ora
+          <span class="under he-only">מרים</span>
+        </span>
+      </div>
+
+      <!-- Suite de la phrase (bas) -->
+      <p class="invitation-text invitation-bottom" data-aos="fade-up" data-aos-duration="900" style="max-width:960px;margin:.4rem auto 0;text-align:center;">
+        à la <strong>Houppa</strong> qui aura lieu le
+        <span class="accent"><strong>7 janvier 2026</strong></span>
+        à <span class="accent"><strong>18h45 précise</strong></span>.
+      </p>
+
+      <!-- Phrase “Ainsi qu’à la réception…” -->
+      <p id="receptionLine" class="hp" data-aos="fade-up" data-aos-duration="900" data-aos-delay="720" style="text-align:center;">
+        Ainsi qu’à la réception qui suivra.
+      </p>
+
+      <!-- Lieu (hébreu) -->
+      <p class="hp place rtl" data-aos="fade-up" data-aos-duration="900" data-aos-delay="520">
+        אמרלד —הגן השקוף בית שמש, ישראל
+      </p>
+
+      <!-- Horaires -->
+      <p class="hp timings italic" data-aos="fade-up" data-aos-duration="900" data-aos-delay="600">
+        <span class="accent">Kabalat Panim à 17h45</span>,
+        <span class="accent">Houppa à 18h45 précise</span>
+      </p>
+
+      <!-- Dédicace (petit) -->
+      <p class="hp dedic small" data-aos="fade-up" data-aos-duration="900" data-aos-delay="820">
+        Une pensée particulière pour nos chers grand parents : <br> Mme&nbsp;Ruth&nbsp;Harrouch, M.&nbsp;Serge&nbsp;Yossef&nbsp;Temim, et M.&nbsp;Samuel&nbsp;Haim&nbsp;Besnainou.
+      </p>
+
+      <!-- Boutons -->
+      <div class="btn-event" style="margin-top:18px;" data-aos="fade-up" data-aos-duration="900" data-aos-delay="920">
+        <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Mariage+de+Natanël+%26+Ora&dates=20260107T164500Z/20260107T220000Z&details=Houppa+%C3%A0+18h45+pr%C3%A9cise,+Kabalat+Panim+%C3%A0+17h45&location=אמרלד+—+הגן+השקוף,+בית+שמש,+Isra%C3%ABl&sf=true&output=xml" 
+           target="_blank" 
+           class="btn-houppa calendar-button">📅 Ajouter au calendrier</a>
+        <a class="btn-houppa waze-button" id="wazeBtn" href="https://ul.waze.com/ul?ll=31.7400%2C34.9880&navigate=yes" target="_blank" rel="noopener">Ouvrir dans Waze</a>
       </div>
     </div>
   </section>
@@ -259,31 +308,32 @@
             <option value="0">Non, je ne peux pas venir 😢</option>
           </select>
         </div>
+
         <!-- Enfants -->
-<div id="childrenSection" class="hidden">
-  <div class="assaha">
-    <label id="childrenLabel">Des enfants vous accompagnent (ילדים)?</label>
-    <div class="radio-group">
-      <label><input type="radio" name="has_kids" value="1"> Oui</label>
-      <label><input type="radio" name="has_kids" value="0" checked> Non</label>
-    </div>
-  </div>
+        <div id="childrenSection" class="hidden">
+          <div class="assaha">
+            <label id="childrenLabel">Des enfants vous accompagnent (ילדים)?</label>
+            <div class="radio-group">
+              <label><input type="radio" name="has_kids" value="1"> Oui</label>
+              <label><input type="radio" name="has_kids" value="0" checked> Non</label>
+            </div>
+          </div>
 
-  <div id="kidsCountWrapper" class="select-wrapper hidden">
-    <select id="kidsCountSelect" name="kids_count">
-      <option disabled selected>Combien d’enfants ?</option>
-      <option value="1">1 enfant</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-      <option value="5">5</option>
-      <option value="6">6</option>
-    </select>
-  </div>
+          <div id="kidsCountWrapper" class="select-wrapper hidden">
+            <select id="kidsCountSelect" name="kids_count">
+              <option disabled selected>Combien d’enfants ?</option>
+              <option value="1">1 enfant</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+            </select>
+          </div>
 
-  <!-- Champs auto-générés -->
-  <div id="kidsList" class="kids-list hidden" aria-live="polite"></div>
-</div>
+          <!-- Champs auto-générés -->
+          <div id="kidsList" class="kids-list hidden" aria-live="polite"></div>
+        </div>
 
         <div id="come_to" class="select-wrapper hidden">
           <select name="come_to" id="preferenceSelect">
