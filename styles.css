@@ -2133,3 +2133,71 @@ html[dir="rtl"] .kid-row{ direction: rtl; }
   .kid-row{ grid-template-columns: 1fr 1fr; }
   .kid-row .kid-age{ grid-column: 1 / -1; }
 }
+/* ================== MOBILE SEULEMENT ================== */
+@media (max-width: 768px) {
+  html, body { overflow-x:hidden; }
+  body { padding-inline: clamp(12px,4vw,20px); }
+
+  /* Typos responsives */
+  h1 { font-size: clamp(28px, 8vw, 40px); line-height: 1.15; }
+  h2 { font-size: clamp(20px, 6vw, 28px); }
+  p, li, label, input, select, textarea { font-size: clamp(14px, 4vw, 18px); }
+
+  /* Conteneurs / sections */
+  .container { width: 100%; max-width: 960px; margin: 0 auto; }
+  section { padding: clamp(24px, 6vw, 48px) 0; }
+
+  /* Hero 100vh iOS-friendly + fond */
+  .hero {
+    min-height: calc(var(--vh, 1vh) * 100);
+    display: grid; place-items: center;
+    padding: 24px 0;
+    background: url("./bg-floral.jpeg") center/cover no-repeat;
+    position: relative;
+  }
+  .hero::before { content:""; position:absolute; inset:0; background: rgba(255,255,255,.72); }
+  .hero .cta { width: 100%; max-width: 420px; }
+
+  /* Navbar / Burger */
+  .navbar { position: sticky; top: 0; z-index: 60; }
+  .burger { width: 44px; height: 44px; }
+  .menu {
+    position: fixed; inset: 0; z-index: 70;
+    background: rgba(255,255,255,.96);
+    padding: 24px;
+    transform: translateY(-100%); transition: transform .25s ease;
+  }
+  .menu.is-open { transform: translateY(0); }
+  body.nav-open { overflow: hidden; height: 100dvh; } /* bloque le scroll derrière le menu */
+
+  /* Grilles */
+  .grid { display: grid; gap: 16px; }
+  .grid-2 { grid-template-columns: 1fr; } /* passe en 1 colonne sur mobile */
+  .countdown { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .countdown .pill { padding: 12px 10px; border-radius: 14px; }
+
+  /* Formulaire RSVP (touch 44px + anti-zoom iOS) */
+  input, select, textarea, button { min-height: 44px; font-size:16px; }
+  .btn { display:inline-flex; align-items:center; justify-content:center; padding:10px 16px; border-radius:999px; }
+
+  /* Médias */
+  img, video, iframe { max-width:100%; height:auto; display:block; border-radius:10px; }
+  .map-embed, .video { width:100%; aspect-ratio:16/9; }
+
+  /* Audio fixé en bas + place au footer */
+  .audio-fixed{
+    position:fixed; left:50%;
+    bottom: calc(env(safe-area-inset-bottom, 0) + 12px);
+    transform: translateX(-50%);
+    width: min(420px, 94vw);
+    z-index:80;
+  }
+  footer { padding-bottom: calc(env(safe-area-inset-bottom) + 80px); }
+
+  /* Ancrages sous header sticky */
+  .anchor { scroll-margin-top: 80px; }
+
+  /* RTL pour l’hébreu */
+  html[dir="rtl"] { direction: rtl; }
+  html[dir="rtl"] .menu, html[dir="rtl"] .navbar { text-align: right; }
+}
