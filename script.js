@@ -561,4 +561,24 @@ form?.addEventListener('submit', async (e) => {
     });
     setLang(document.documentElement.getAttribute('data-lang') || 'fr');
   });
-  
+  // 100vh iOS : variable --vh
+function setVh(){ document.documentElement.style.setProperty('--vh', (window.innerHeight*0.01) + 'px'); }
+setVh(); window.addEventListener('resize', setVh); window.addEventListener('orientationchange', setVh);
+
+// Verrouillage du scroll quand le menu est ouvert (si tu ajoutes/retire .is-open sur .menu)
+const menu = document.querySelector('.menu');
+function toggleBodyLock(){ document.body.classList.toggle('nav-open', menu?.classList.contains('is-open')); }
+
+// Si tu as un switch FR/HE : mets la direction du document
+function setDir(lang){ document.documentElement.setAttribute('dir', lang === 'he' ? 'rtl' : 'ltr'); }
+// Exemple : setDir('fr'); // ou setDir('he');
+
+// (Option debug) surligne les éléments qui débordent en largeur
+function debugOverflow(){
+  const w = document.documentElement.clientWidth;
+  document.querySelectorAll('*').forEach(el=>{
+    const r = el.getBoundingClientRect();
+    if(r.right - w > 1){ el.style.outline = '2px solid red'; }
+  });
+}
+// debugOverflow(); // décommente si besoin temporairement
