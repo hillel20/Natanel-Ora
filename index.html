@@ -343,6 +343,20 @@
     text-wrap: balance;             /* équilibre les retours à la ligne */
   }
 }
+    /* === MOBILE: "Remercient Hachem…" plus large sans changer la taille === */
+@media (max-width: 768px){
+  #houppa-soiree .invitation-text{
+    max-width: 100vw !important;          /* utilise toute la largeur écran */
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+    margin-left: 0; 
+    margin-right: 0;
+    font-size: inherit !important;         /* garder ta taille d'origine */
+    line-height: 1.5;                      /* confort, pas plus petit */
+    text-wrap: balance;                    /* jolis retours à la ligne */
+  }
+}
+
 
   </style>
 </head>
