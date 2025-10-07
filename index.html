@@ -432,6 +432,44 @@
 margin-left: 50%;
 transform: translateX(-50%);
 
+    /* ===== RTL FIX — carte pleine largeur sans décalage (mobile) ===== */
+@media (max-width:768px){
+
+  /* 0) Pas de scroll horizontal résiduel */
+  html, body { overflow-x: hidden; }
+
+  /* 1) Conteneur de la carte = largeur normale de la page, pas 100vw,
+        SANS margin-left/right ni translate */
+  #houppa-soiree .paper-inner.container{
+    width: 100% !important;
+    max-width: none !important;
+    padding-inline: 12px !important;
+    margin: 0 !important;
+    left: auto !important;
+    right: auto !important;
+    transform: none !important;
+  }
+
+  /* 2) Si un autre .container interne force 100vw, on l'annule aussi */
+  #houppa-soiree .container{
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding-inline: 12px !important;
+    left: auto !important;
+    right: auto !important;
+    transform: none !important;
+  }
+
+  /* 3) En RTL, on ne touche pas l’alignement global, juste on s'assure qu'il n'y a
+        AUCUN décalage latéral caché */
+  html[dir="rtl"] #houppa-soiree .paper-inner.container,
+  html[dir="rtl"] #houppa-soiree .container{
+    margin-inline: 0 !important;
+    padding-inline: 12px !important;
+  }
+}
+
   </style>
 </head>
 
