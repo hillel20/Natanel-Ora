@@ -397,6 +397,38 @@
   }
 }
 
+/* ==== MOBILE: carte plein large + paragraphe qui utilise TOUTE la largeur ==== */
+@media (max-width: 768px){
+
+  /* 1) La “carte” (paper-inner) prend réellement toute la largeur écran */
+  #houppa-soiree .paper-inner.container,
+  #houppa-soiree .container{
+    width: 100vw !important;
+    max-width: 100vw !important;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    margin-left: 50% !important;
+    transform: translateX(-50%) !important; /* neutralise un centrage max-width */
+  }
+
+  /* sécurité: pas de gouttières cachées au niveau de la section elle-même */
+  #houppa-soiree.paper{
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* 2) “Remercient Hachem…” : on enlève toute limite de largeur et on laisse s’étaler */
+  #houppa-soiree .invitation-top{
+    max-width: none !important;   /* écrase le style inline 960px */
+    width: 100% !important;
+    padding-left: 0;              /* déjà géré par le conteneur ci-dessus */
+    padding-right: 0;
+    font-size: inherit !important;
+    line-height: 1.5;
+    letter-spacing: -0.006em;     /* micro-compaction (invisible) */
+    word-spacing: -0.02em;
+  }
+}
 
   </style>
 </head>
