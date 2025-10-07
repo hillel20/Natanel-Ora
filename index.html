@@ -470,6 +470,43 @@ transform: translateX(-50%);
   }
 }
 
+    /* ===== MOBILE HE (RTL) — réaligne la carte et pousse un cran à droite ===== */
+@media (max-width:768px){
+
+  /* 1) Sélecteur robuste pour le mode hébreu (un des trois peut être présent) */
+  html[dir="rtl"] #houppa-soiree .paper-inner.container,
+  html[data-lang="he"] #houppa-soiree .paper-inner.container,
+  body.he-mode        #houppa-soiree .paper-inner.container,
+  html[dir="rtl"] #houppa-soiree .container,
+  html[data-lang="he"] #houppa-soiree .container,
+  body.he-mode        #houppa-soiree .container{
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding-inline: clamp(20px, 7vw, 28px) !important; /* ← "un bon cran" */
+    box-sizing: border-box;
+    left: auto !important; right: auto !important; transform: none !important;
+  }
+
+  /* 2) Évite tout décalage horizontal résiduel */
+  html[dir="rtl"] body,
+  html[data-lang="he"] body,
+  body.he-mode { overflow-x: hidden; }
+
+  /* 3) Parents en RTL : sens et alignements cohérents */
+  html[dir="rtl"] #houppa-soiree .parents-grid,
+  html[data-lang="he"] #houppa-soiree .parents-grid,
+  body.he-mode        #houppa-soiree .parents-grid { direction: rtl; }
+
+  html[dir="rtl"] #houppa-soiree .parents-grid .hatan,
+  html[data-lang="he"] #houppa-soiree .parents-grid .hatan,
+  body.he-mode        #houppa-soiree .parents-grid .hatan { text-align: right; }
+
+  html[dir="rtl"] #houppa-soiree .parents-grid .kala,
+  html[data-lang="he"] #houppa-soiree .parents-grid .kala,
+  body.he-mode        #houppa-soiree .parents-grid .kala  { text-align: left; }
+}
+
   </style>
 </head>
 
