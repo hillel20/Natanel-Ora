@@ -370,6 +370,32 @@
     max-width:100vw !important; padding-inline:8px; line-height:1.5;
   }
 }
+/* === Mobile : exactement 2 lignes pour "Remercient Hachem…" === */
+@media (max-width: 768px){
+  #houppa-soiree .invitation-top { 
+    max-width: 100vw !important; 
+    padding-inline: 8px; 
+    line-height: 1.5; 
+  }
+  #houppa-soiree .invitation-top .line1,
+  #houppa-soiree .invitation-top .line2{
+    display: block !important;      /* force 2 lignes */
+    white-space: nowrap !important; /* pas de retour dans chaque ligne */
+    letter-spacing: -0.008em;       /* compaction légère */
+    word-spacing: -0.02em;
+  }
+}
+
+/* Desktop : revient au flux normal (aucune contrainte) */
+@media (min-width: 769px){
+  #houppa-soiree .invitation-top .line1,
+  #houppa-soiree .invitation-top .line2{
+    display: inline !important;
+    white-space: normal !important;
+    letter-spacing: normal;
+    word-spacing: normal;
+  }
+}
 
 
   </style>
@@ -448,9 +474,8 @@
 
       <!-- Texte de remerciement (haut) -->
 <p class="invitation-text invitation-top" style="max-width:960px;margin:1rem auto 0;text-align:center;">
-  <span class="txt1">Remercient <strong>Hachem</strong> d’avoir la joie de vous</span><span class="m-break"></span>
-  <span class="txt2">convier au mariage de leurs enfants et petits-enfants,</span>
-  <br class="d-break">
+  <span class="line1">Remercient <strong>Hachem</strong> d’avoir la joie de vous</span>
+  <span class="line2">convier au mariage de leurs enfants et petits-enfants,</span>
 </p>
 
       <!-- Prénoms calligraphiés (centre de carte) -->
