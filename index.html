@@ -507,6 +507,23 @@ transform: translateX(-50%);
   body.he-mode        #houppa-soiree .parents-grid .kala  { text-align: left; }
 }
 
+    /* ===== Visibilité FR / HE ===== */
+.he-only { display: none; }
+.fr-only { display: block; }
+
+html[dir="rtl"] .he-only,
+html[data-lang="he"] .he-only,
+body.he-mode .he-only { display: block; }
+
+html[dir="rtl"] .fr-only,
+html[data-lang="he"] .fr-only,
+body.he-mode .fr-only { display: none; }
+
+/* Cacher la phrase "Ainsi qu’à la réception..." en hébreu */
+html[dir="rtl"] #receptionLine,
+html[data-lang="he"] #receptionLine,
+body.he-mode #receptionLine { display: none !important; }
+
   </style>
 </head>
 
