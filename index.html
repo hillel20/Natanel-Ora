@@ -545,6 +545,37 @@ body.he-mode #receptionLine { display: none !important; }
 @media (max-width:768px){
   #houppa_title_he{ font-size: clamp(24px, 7.2vw, 36px) !important; }
 }
+/* ====== RESCUE — visibilité & langues ====== */
+
+/* Révélation des sections .reveal (sinon le héros + compteur restent invisibles) */
+.reveal{
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.reveal.visible{
+  opacity: 1;
+  transform: none;
+}
+
+/* Compteur : au cas où, on garantit qu'il n'est pas masqué */
+#countdown{
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Logique FR/HE de base (affichage conditionnel) */
+.he-only { display: none; }
+.fr-only { display: block; }
+html[dir="rtl"] .he-only,
+html[data-lang="he"] .he-only,
+body.he-mode .he-only { display: block; }
+html[dir="rtl"] .fr-only,
+html[data-lang="he"] .fr-only,
+body.he-mode .fr-only { display: none; }
+
+/* HE : éviter le retour à la ligne entre "7" et "בינואר 2026" si tu l'utilises */
+.no-wrap-he { white-space: nowrap; display: inline-block; }
 
   </style>
 </head>
