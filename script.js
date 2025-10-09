@@ -229,7 +229,7 @@
         row.innerHTML = `
           <input type="text"   name="kid_first_${i}" placeholder="${tKid('first', i)}">
           <input type="text"   name="kid_last_${i}"  placeholder="${tKid('last', i)}">
-          <input type="number" name="kid_age_${i}"   class="kid-age" min="0" max="17" placeholder="${tKid('age', i)}">
+          <input type="number" name="kid_age_${i}"   class="kid-age" min="0" max="13" placeholder="${tKid('age', i)}">
         `;
         kidsList.appendChild(row);
       }
@@ -367,7 +367,7 @@ form?.addEventListener('submit', async (e) => {
       countdown: { days: 'Jours', hours: 'Heures', minutes: 'Minutes', seconds: 'Secondes' },
       houppaTitle: 'Houppa &amp; Soirée',
       invitationTop: 'Remercient <strong>Hachem</strong> d’avoir la joie de vous convier <br>au mariage de leurs enfants et petits-enfants,',
-      invitationBottom: 'à la <strong>Houppa</strong> qui aura lieu le <span class="accent"><strong>7 janvier 2026</strong></span> à <span class="accent"><strong>18h45 précise</strong></span>.',
+      invitationBottom: 'à la <strong>Houppa</strong> qui aura lieu le <span class="accent"><strong>7 janvier 2026</strong></span>  <span class="accent"><strong>18h45 précise</strong></span>.',
       reception: 'Ainsi qu’à la réception qui suivra.',
       placeLine: "אמרלד —הגן השקוף בית שמש, ישראל",
       timings:   '<span class="accent">Kabalat Panim à 17h45</span>, <span class="accent">Houppa à 18h45 précise</span>',
@@ -399,7 +399,7 @@ form?.addEventListener('submit', async (e) => {
       countdown: { days: 'ימים', hours: 'שעות', minutes: 'דקות', seconds: 'שניות' },
       houppaTitle: 'חופה וקבלת פנים',
       invitationTop: 'מודים לה׳ על הזכות לשמוח ולהזמינכם<br>לחתונת ילדיהם ונכדיהם,',
-      invitationBottom: 'בחופה שתתקיים בע״ה ביום <span class="accent"><strong>7 בינואר 2026</strong></span> בשעה <span class="accent"><strong>18:45</strong></span>.',
+      invitationBottom: 'בחופה שתתקיים בע״ה ביום <span class="accent"><strong>7 בינואר 2026</strong></span> <span class="accent"><strong>-י״ח בטבת תשפ״ו</strong></span>.',
       reception: 'וכן לקבלת הפנים שלאחריה.',
       placeLine:  'אמרלד — הגן השקוף · בית שמש, ישראל',
       timings:    '<span class="accent">קבלת פנים 17:45</span> · <span class="accent">חופה 18:45 בדיוק</span>',
