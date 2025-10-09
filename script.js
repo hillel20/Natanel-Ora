@@ -367,7 +367,7 @@ form?.addEventListener('submit', async (e) => {
       countdown: { days: 'Jours', hours: 'Heures', minutes: 'Minutes', seconds: 'Secondes' },
       houppaTitle: 'Houppa &amp; Soirée',
       invitationTop: 'Remercient <strong>Hachem</strong> d’avoir la joie de vous convier <br>au mariage de leurs enfants et petits-enfants,',
-      invitationBottom: 'à la <strong>Houppa</strong> qui aura lieu le <span class="accent"><strong>7 janvier 2026</strong></span>  <span class="accent"><strong>18h45 précise</strong></span>.',
+      invitationBottom: 'à la <strong>Houppa</strong> qui aura lieu le <span class="accent"><strong>7 janvier 2026</strong></span> <span class="accent"><strong>18h45 précise</strong></span>.',
       reception: 'Ainsi qu’à la réception qui suivra.',
       placeLine: "אמרלד —הגן השקוף בית שמש, ישראל",
       timings:   '<span class="accent">Kabalat Panim à 17h45</span>, <span class="accent">Houppa à 18h45 précise</span>',
