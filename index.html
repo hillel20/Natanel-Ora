@@ -544,6 +544,12 @@ body.he-mode #receptionLine { display: none !important; }
   #houppa_title_he { font-size: clamp(24px, 7.2vw, 36px); }
 }
 
+
+    #houppa_title_he{ color:var(--primary-color); }
+@media (max-width:768px){
+  #houppa_title_he{ font-size: clamp(24px, 7.2vw, 36px) !important; }
+}
+
   </style>
 </head>
 
@@ -647,18 +653,24 @@ body.he-mode #receptionLine { display: none !important; }
 
 <!-- FR -->
 <!-- FR -->
-<p class="invitation-text invitation-bottom fr-only" data-aos="fade-up" data-aos-duration="900" style="max-width:960px;margin:.4rem auto 0;text-align:center;">
+<!-- FR (sans heure, avec 18 Tevet 5786) -->
+<p class="invitation-text invitation-bottom fr-only"
+   data-aos="fade-up" data-aos-duration="900"
+   style="max-width:960px;margin:.4rem auto 0;text-align:center;">
   à la <strong>Houppa</strong> qui aura lieu le
   <span class="accent"><strong>7 janvier 2026</strong></span>
   — <span class="accent"><strong>18 Tevet 5786</strong></span>.
 </p>
 
-
-<!-- HE -->
-<p class="invitation-text invitation-bottom he-only" dir="rtl" data-aos="fade-up" data-aos-duration="900" style="max-width:960px;margin:.4rem auto 0;text-align:center;">
+<!-- HE (sans heure, en doré comme le reste) -->
+<p class="invitation-text invitation-bottom he-only" dir="rtl"
+   data-aos="fade-up" data-aos-duration="900"
+   style="max-width:960px;margin:.4rem auto 0;text-align:center;">
   בחופה שתתקיים בע״ה ביום
-  <span class="accent"><strong>7 בינואר 2026</strong></span>.
+  <span class="accent"><strong>7 בינואר 2026</strong></span>
+  — <span class="accent"><strong>י״ח בטבת תשפ״ו</strong></span>.
 </p>
+
 
       <!-- Phrase “Ainsi qu’à la réception…” -->
       <p id="receptionLine" class="hp" data-aos="fade-up" data-aos-duration="900" data-aos-delay="720" style="text-align:center;">
