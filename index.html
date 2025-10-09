@@ -524,6 +524,14 @@ html[dir="rtl"] #receptionLine,
 html[data-lang="he"] #receptionLine,
 body.he-mode #receptionLine { display: none !important; }
 
+    @media (max-width:768px){
+  #houppa_title_he{
+    font-size: clamp(22px, 6.8vw, 34px);
+    color: var(--primary-color);      /* doré, comme le reste */
+    letter-spacing: .05em;
+  }
+}
+
   </style>
 </head>
 
@@ -626,10 +634,13 @@ body.he-mode #receptionLine { display: none !important; }
       </div>
 
 <!-- FR -->
+<!-- FR -->
 <p class="invitation-text invitation-bottom fr-only" data-aos="fade-up" data-aos-duration="900" style="max-width:960px;margin:.4rem auto 0;text-align:center;">
   à la <strong>Houppa</strong> qui aura lieu le
-  <span class="accent"><strong>7 janvier 2026</strong></span>.
+  <span class="accent"><strong>7 janvier 2026</strong></span>
+  — <span class="accent"><strong>18 Tevet 5786</strong></span>.
 </p>
+
 
 <!-- HE -->
 <p class="invitation-text invitation-bottom he-only" dir="rtl" data-aos="fade-up" data-aos-duration="900" style="max-width:960px;margin:.4rem auto 0;text-align:center;">
