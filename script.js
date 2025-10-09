@@ -372,7 +372,7 @@ document.addEventListener('DOMContentLoaded', function () {
     houppaTitle: 'Houppa &amp; Soirée',
     invitationTop: 'Remercient <strong>Hachem</strong> d’avoir la joie de vous convier <br>au mariage de leurs enfants et petits-enfants,',
     // ➜ Sans l’heure + ajout de la date hébraïque
-    invitationBottom: 'à la <strong>Houppa</strong> qui aura lieu le <span class="accent"><strong>7 janvier 2026 — <strong>18 Tevet 5786 </strong></span> <span class="accent"><strong>18 Tevet 5786</strong></span>.',
+    invitationBottom: 'à la <strong>Houppa</strong> qui aura lieu le <span class="accent"><strong>7 janvier 2026 — 18 Tevet 5786.</strong></span> ,
     reception: 'Ainsi qu’à la réception qui suivra.',
     placeLine: "אמרלד —הגן השקוף בית שמש, ישראל",
     timings:   '<span class="accent">Kabalat Panim à 17h45</span>, <span class="accent">Houppa à 18h45 précise</span>',
