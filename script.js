@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   /* ---------- Envoi → Google Sheets + fallback mail ---------- */
   // ⚠️ Mets ici TON URL /exec actuelle (si tu redéploies, elle change)
-  const SHEET_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxJ-XwTf3YnaT7hoWxAn3Aaix786-PhzMaX-nmtGg4/exec';
+  const SHEET_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzcRkS994SuH8mSq3zBYWiyeKWSzVR1t5Q27GBA6sKlSjFFfZyCU4WXl0WLqEwJ7F1o/exec';
 
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
