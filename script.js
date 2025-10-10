@@ -618,4 +618,9 @@ function debugOverflow(){
     if(r.right - w > 1){ el.style.outline = '2px solid red'; }
   });
 }
+function doGet(e) {
+  return ContentService.createTextOutput('OK')
+    .setMimeType(ContentService.MimeType.TEXT);
+}
+
 // debugOverflow(); // décommente si besoin temporairement
