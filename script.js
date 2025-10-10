@@ -237,7 +237,8 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // === Envoi = Google Sheet (webhook) + fallback mailto ===
-  const SHEET_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzcQqgE85xzy4Nw6KQM_BouDUPt5wfe3RE7Nn3AbsURD8J7F6qjtO77niNwBZib2Efqzg/exec'; // <-- colle l’URL /exec ici
+   const SHEET_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxmnY9DobMgPe-AKN41feTeXsLTvauiPN_KRx0vLaXdkJKEMkURAfUPu12SfZ7tIxuP/exec';
+
 
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
