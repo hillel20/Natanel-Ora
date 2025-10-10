@@ -1,16 +1,9 @@
 /* =========================================================
-   NATANEL & ORA — JS (complet FR/HE)
-   - Navbar / burger / scroll progress
-   - Countdown
-   - AOS + CircleType (arc)
-   - Music on "Voir l’invitation"
-   - Calendar web (Google) + Waze
-   - RSVP + Enfants (nb + prénoms + âge)
-   - Switch langue FR/HE (navbar, bouton, héros, carte, parents, RSVP, noms centre)
+   NATANEL & ORA — JS (FR/HE)
    ========================================================= */
 
 document.addEventListener('DOMContentLoaded', function () {
-  /* ---------- Navbar state & burger ---------- */
+  /* ---------- Navbar / burger ---------- */
   const navbar    = document.getElementById('navbar');
   const hamburger = document.getElementById('hamburger');
   const navLinks  = document.getElementById('nav-links');
@@ -19,16 +12,14 @@ document.addEventListener('DOMContentLoaded', function () {
     if (window.scrollY > 20) { navbar.classList.add('scrolled'); navbar.classList.remove('transparent'); }
     else { navbar.classList.add('transparent'); navbar.classList.remove('scrolled'); }
   };
-  onScrollNav();
-  window.addEventListener('scroll', onScrollNav);
+  onScrollNav(); window.addEventListener('scroll', onScrollNav);
 
   hamburger?.addEventListener('click', () => {
     hamburger.classList.toggle('open');
     navLinks.classList.toggle('active');
   });
   navLinks?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-    hamburger.classList.remove('open');
-    navLinks.classList.remove('active');
+    hamburger.classList.remove('open'); navLinks.classList.remove('active');
   }));
 
   /* ---------- Scroll progress ---------- */
@@ -38,10 +29,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
     progress.style.width = `${scrolled}%`;
   };
-  window.addEventListener('scroll', onScrollProgress);
-  onScrollProgress();
+  window.addEventListener('scroll', onScrollProgress); onScrollProgress();
 
-  /* ---------- Reveal (fallback to AOS) ---------- */
+  /* ---------- Reveal (fallback) ---------- */
   const reveals = document.querySelectorAll('.reveal');
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
@@ -59,8 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const w = window.innerWidth;
       ct.radius(w >= 992 ? 600 : w >= 560 ? 360 : 280);
     };
-    setRadius();
-    window.addEventListener('resize', setRadius);
+    setRadius(); window.addEventListener('resize', setRadius);
   }
 
   /* ---------- Countdown ---------- */
@@ -84,24 +73,20 @@ document.addEventListener('DOMContentLoaded', function () {
       minsEl.textContent  = String(m).padStart(2, '0');
       secsEl.textContent  = String(s).padStart(2, '0');
     };
-    tick();
-    setInterval(tick, 1000);
+    tick(); setInterval(tick, 1000);
   }
 
-  /* ---------- Back-to-top + Music on enter ---------- */
+  /* ---------- Back-to-top + Music ---------- */
   const backBtn  = document.getElementById('scrollToTop');
   const music    = document.getElementById('backgroundMusic');
   const enterBtn = document.getElementById('enterSite');
 
   const toggleBack = () => { backBtn.style.display = window.scrollY > 300 ? 'block' : 'none'; };
-  toggleBack();
-  window.addEventListener('scroll', toggleBack);
-
+  toggleBack(); window.addEventListener('scroll', toggleBack);
   backBtn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
   if (enterBtn && music) {
-    music.loop = true;
-    music.preload = 'auto';
+    music.loop = true; music.preload = 'auto';
     enterBtn.addEventListener('click', () => {
       music.volume = 0.35;
       const tryPlay = music.play();
@@ -119,19 +104,16 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   }
-  const toggleBtn = document.getElementById('musicToggle');
-  if (toggleBtn) toggleBtn.remove();
+  document.getElementById('musicToggle')?.remove();
 
-  /* ---------- Event buttons (Calendar web / Waze) ---------- */
-  const calendarBtn = document.getElementById('add_calendar') || document.querySelector('.calendar-button');
+  /* ---------- Event buttons ---------- */
+  const calendarBtn = document.querySelector('.calendar-button');
   const wazeBtn     = document.getElementById('wazeBtn');
-
   const WAZE_URL = 'https://ul.waze.com/ul?ll=31.7515%2C34.9885&navigate=yes';
   if (wazeBtn) wazeBtn.href = WAZE_URL;
 
   calendarBtn?.addEventListener('click', (e) => {
     e.preventDefault();
-
     const title    = 'Houppa — Natanël & Ora';
     const details  = 'Kabalat Panim à 17h45 • Houppa à 18h45 précise';
     const location = 'אמרלד — הגן השקוף, בית שמש, ישראל';
@@ -141,10 +123,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const end   = new Date('2026-01-07T22:45:00');
 
     const pad = (n) => String(n).padStart(2,'0');
-    const fmtLocal = (d) =>
+    const fmtLocal = (d) => (
       d.getFullYear() + pad(d.getMonth()+1) + pad(d.getDate()) +
-      'T' + pad(d.getHours()) + pad(d.getMinutes()) + pad(d.getSeconds());
-
+      'T' + pad(d.getHours()) + pad(d.getMinutes()) + pad(d.getSeconds())
+    );
     const dates = `${fmtLocal(start)}/${fmtLocal(end)}`;
 
     const url = new URL('https://calendar.google.com/calendar/render');
@@ -159,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function () {
     window.open(url.toString(), '_blank', 'noopener');
   });
 
-  /* ---------- RSVP Logic (+ enfants) ---------- */
+  /* ---------- RSVP Logic ---------- */
   const form            = document.getElementById('rsvpForm');
   const presenceSelect  = document.getElementById('presenceSelect');
   const comeTo          = document.getElementById('come_to');
@@ -193,13 +175,11 @@ document.addEventListener('DOMContentLoaded', function () {
       if (kidsCountSelect) kidsCountSelect.selectedIndex = 0;
     }
   };
-  presenceSelect?.addEventListener('change', togglePresence);
-  togglePresence();
+  presenceSelect?.addEventListener('change', togglePresence); togglePresence();
 
   assahaRadios.forEach(r => r.addEventListener('change', () => {
     villeWrapper.classList.toggle('hidden', r.value !== '1' || !r.checked);
   }));
-
   kidsRadios.forEach(r => r.addEventListener('change', () => {
     const yes = r.value === '1' && r.checked;
     kidsCountWrapper?.classList.toggle('hidden', !yes);
@@ -218,7 +198,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (which === 'age')   return pack.rsvp.kidAge(i);
     return '';
   }
-
   kidsCountSelect?.addEventListener('change', () => {
     const n = parseInt(kidsCountSelect.value || '0', 10);
     if (!kidsList) return;
@@ -236,23 +215,20 @@ document.addEventListener('DOMContentLoaded', function () {
     kidsList.classList.remove('hidden');
   });
 
-  // === Envoi = Google Sheet (webhook) + fallback mailto ===
-   const SHEET_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxmnY9DobMgPe-AKN41feTeXsLTvauiPN_KRx0vLaXdkJKEMkURAfUPu12SfZ7tIxuP/exec';
-
+  /* ---------- Envoi → Google Sheets + fallback mail ---------- */
+  const SHEET_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxmnY9DobMgPe-AKN41feTeXsLTvauiPN_KRx0vLaXdkJKEMkURAfUPu12SfZ7tIxuP/exec';
 
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     errMsg.style.display = 'none';
 
-    // Construit la charge utile
+    // Données
     const fd = new FormData(form);
     const payload = Object.fromEntries(fd.entries());
-
-    // Ajoute contexte supplémentaire
     payload.lang = document.documentElement.getAttribute('data-lang') || 'fr';
     payload.user_agent = navigator.userAgent || '';
 
-    // Enfants (rebalaye les lignes générées dynamiquement)
+    // Enfants
     const kids = [];
     document.querySelectorAll('#kidsList .kid-row').forEach(row => {
       const first = row.querySelector('input[name^="kid_first_"]')?.value?.trim();
@@ -263,50 +239,66 @@ document.addEventListener('DOMContentLoaded', function () {
     payload.kids = kids;
     payload.kids_count = payload.kids_count || kids.length;
 
-    // Envoi vers Google Apps Script
     try {
-      const res = await fetch(SHEET_WEBAPP_URL, {
-        method: 'POST',
-        headers: { 'Content-Type':'application/json' },
-        body: JSON.stringify(payload),
-      });
-
-      // Si le script répond OK → succès visuel
-      if (res.ok) {
-        const j = await res.json().catch(()=>({ok:true}));
-        if (j.ok !== false) {
-          document.getElementById('confirmation-message').style.display = 'block';
-          form.reset();
-          // Repli de sections
-          togglePresence();
-          villeWrapper.classList.add('hidden');
-          const kidsListEl = document.getElementById('kidsList');
-          if (kidsListEl) kidsListEl.innerHTML = '';
-          return;
-        }
+      // pas de Content-Type pour éviter un préflight strict
+      const res = await fetch(SHEET_WEBAPP_URL, { method: 'POST', body: JSON.stringify(payload) });
+      const text = await res.text();
+      let j = {}; try { j = JSON.parse(text); } catch {}
+      if (res.ok && j.ok !== false) {
+        document.getElementById('confirmation-message').style.display = 'block';
+        form.reset(); togglePresence(); villeWrapper.classList.add('hidden');
+        const kidsListEl = document.getElementById('kidsList'); if (kidsListEl) kidsListEl.innerHTML = '';
+        return;
       }
-      throw new Error('Réponse non OK');
+      throw new Error(`HTTP ${res.status} ${text}`);
     } catch (err) {
-      // Fallback mailto (au cas où l’API n’est pas dispo)
-      const EMAIL_TO = 'amzallaghillel@gmail.com'; // <-- mets ton adresse
+      // Fallback mailto (libellés propres + Ashdod)
+      const lang = (payload.lang === 'he') ? 'he' : 'fr';
+      const cityMap = (lang === 'he')
+        ? { jerusalem:'ירושלים', telaviv:'אשדוד' }
+        : { jerusalem:'Jérusalem', telaviv:'Ashdod' };
+
+      const label = (k) => ({
+        first_name: lang==='he'?'שם פרטי':'Prénom',
+        last_name:  lang==='he'?'שם משפחה':'Nom',
+        email:      'Email',
+        tel:        lang==='he'?'טלפון':'Téléphone',
+        presence:   lang==='he'?'נוכחות':'Présence',
+        come_to:    lang==='he'?'מגיע/ה ל־':'Je viens pour',
+        nb_personne:lang==='he'?'סה״כ משתתפים':'Nb total de personnes',
+        assaha:     lang==='he'?'הסעה':'Navette',
+        ville_assaha: lang==='he'?'עיר להסעה':'Ville navette',
+        message:    lang==='he'?'הודעה':'Message',
+      }[k] || k);
+
+      const display = (k,v) => {
+        if (k==='presence')  return v==='1' ? (lang==='he'?'כן':'Oui') : (lang==='he'?'לא':'Non');
+        if (k==='come_to')   return v==='1' ? (lang==='he'?'חופה וערב':'Houppa & soirée') : (lang==='he'?'לחופה בלבד':'Uniquement houppa');
+        if (k==='assaha')    return v==='1' ? (lang==='he'?'כן':'Oui') : (lang==='he'?'לא':'Non');
+        if (k==='ville_assaha') return cityMap[v] || v;
+        return v;
+      };
+
       const lines = [];
-      Object.keys(payload).forEach(k => {
-        if (k === 'kids') return;
-        lines.push(`${k}: ${payload[k]}`);
-      });
-      if (kids.length) {
-        lines.push('Enfants: ' + kids.map(k => `${k.first||''} ${k.last||''} (${k.age||''} ans)`).join(' | '));
+      for (const [k,v] of Object.entries(payload)) {
+        if (k==='kids' || k==='kids_count' || k==='lang' || k==='user_agent') continue;
+        if (v != null && String(v).trim() !== '') lines.push(`${label(k)}: ${display(k,v)}`);
       }
-      const subject = encodeURIComponent('RSVP — Natanël & Ora');
-      const body    = encodeURIComponent(lines.join('\n'));
+      if (kids.length) {
+        lines.push((lang==='he'?'ילדים':'Enfants') + ': ' +
+          kids.map(k => `${k.first||''} ${k.last||''} (${k.age||''} ${lang==='he'?'שנים':'ans'})`).join(' | ')
+        );
+      }
+
+      const EMAIL_TO = 'amzallaghillel@gmail.com';
+      const subject  = encodeURIComponent('RSVP — Natanël & Ora');
+      const body     = encodeURIComponent(lines.join('\n'));
       window.location.href = `mailto:${EMAIL_TO}?subject=${subject}&body=${body}`;
       document.getElementById('confirmation-message').style.display = 'block';
     }
   });
 
-  /* =========================================================
-     SWITCH LANGUE FR / HE (tout le site)
-     ========================================================= */
+  /* ---------- Switch langue FR/HE ---------- */
   const root = document.documentElement;
   const body = document.body;
   const card = document.getElementById('houppa-soiree');
@@ -321,13 +313,10 @@ document.addEventListener('DOMContentLoaded', function () {
     cdHours: document.querySelector('#countdown .heures + .label'),
     cdMins:  document.querySelector('#countdown .minutes + .label'),
     cdSecs:  document.querySelector('#countdown .secondes + .label'),
-    houppaTitle:      document.getElementById('houppa_title'),      // FR
-    houppaTitleHe:    document.getElementById('houppa_title_he'),   // HE (si présent)
-    invitationTop:    document.querySelector('.invitation-top') || document.querySelector('.invitation-text'),
+    houppaTitle:      document.getElementById('houppa_title'),
+    invitationTop:    document.querySelector('.invitation-top'),
     invitationBottom: document.querySelector('.invitation-bottom'),
-    invitationBottomFr: document.querySelector('.invitation-bottom.fr-only'),
-    invitationBottomHe: document.querySelector('.invitation-bottom.he-only'),
-    reception:        document.getElementById('receptionLine') || document.querySelector('.hp.reception'),
+    reception:        document.getElementById('receptionLine'),
     placeLine:        document.querySelector('.place'),
     timings:          document.querySelector('.timings'),
     dedic:            document.querySelector('.dedic'),
@@ -372,8 +361,7 @@ document.addEventListener('DOMContentLoaded', function () {
     countdown: { days: 'Jours', hours: 'Heures', minutes: 'Minutes', seconds: 'Secondes' },
     houppaTitle: 'Houppa &amp; Soirée',
     invitationTop: 'Remercient <strong>Hachem</strong> d’avoir la joie de vous convier <br>au mariage de leurs enfants et petits-enfants,',
-    // ➜ Sans l’heure + ajout de la date hébraïque
-    invitationBottom: 'à la <strong>Houppa</strong> qui aura lieu le <span class="accent"><strong>7 janvier 2026 — 18 Tevet 5786.</strong></span>' ,
+    invitationBottom: 'à la <strong>Houppa</strong> qui aura lieu le <span class="accent"><strong>7 janvier 2026 — 18 Tevet 5786.</strong></span>',
     reception: 'Ainsi qu’à la réception qui suivra.',
     placeLine: "אמרלד —הגן השקוף בית שמש, ישראל",
     timings:   '<span class="accent">Kabalat Panim à 17h45</span>, <span class="accent">Houppa à 18h45 précise</span>',
@@ -403,12 +391,9 @@ document.addEventListener('DOMContentLoaded', function () {
     names: { bride: 'נתנאל', and: '&', groom: '& אורה מרים' },
     enterBtn: 'לצפייה בהזמנה',
     countdown: { days: 'ימים', hours: 'שעות', minutes: 'דקות', seconds: 'שניות' },
-    // ➜ Titre HE réduit à "חופה"
     houppaTitle: 'חופה',
     invitationTop: 'מודים לה׳ על הזכות לשמוח ולהזמינכם<br>לחתונת ילדיהם ונכדיהם,',
-    // ➜ Sans l’heure, avec date hébraïque en doré
     invitationBottom: 'בחופה שתתקיים בע״ה ביום <span class="accent"><strong>7 בינואר 2026</strong></span> — <span class="accent"><strong>י״ח בטבת תשפ״ו</strong></span>.',
-    // ➜ Cacher la phrase de réception en HE
     reception: '',
     placeLine:  'אמרלד — הגן השקוף · בית שמש, ישראל',
     timings:    '<span class="accent">קבלת פנים 17:45</span> · <span class="accent">חופה 18:45 בדיוק</span>',
@@ -434,39 +419,39 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   };
 
-  /* ---------- Helpers ---------- */
+  /* ---------- Helpers + apply lang ---------- */
   function setParents(lines, arr){ lines.forEach((n,i)=>{ if(arr[i]) n.innerHTML = arr[i]; }); }
   function setHero(p){
-    if(el.heroBride) el.heroBride.textContent = p.hero.bride;
-    if(el.heroAnd)   el.heroAnd.textContent   = p.hero.and;
-    if(el.heroGroom) el.heroGroom.textContent = p.hero.groom;
+    el.heroBride && (el.heroBride.textContent = p.hero.bride);
+    el.heroAnd   && (el.heroAnd.textContent   = p.hero.and);
+    el.heroGroom && (el.heroGroom.textContent = p.hero.groom);
   }
   function setCountdownLabels(p){
-    if(el.cdDays)  el.cdDays.textContent  = p.countdown.days;
-    if(el.cdHours) el.cdHours.textContent = p.countdown.hours;
-    if(el.cdMins)  el.cdMins.textContent  = p.countdown.minutes;
-    if(el.cdSecs)  el.cdSecs.textContent  = p.countdown.seconds;
+    el.cdDays  && (el.cdDays.textContent  = p.countdown.days);
+    el.cdHours && (el.cdHours.textContent = p.countdown.hours);
+    el.cdMins  && (el.cdMins.textContent  = p.countdown.minutes);
+    el.cdSecs  && (el.cdSecs.textContent  = p.countdown.seconds);
   }
   function setNames(p){
     if (el.namesBride) {
       if (el.namesBride.firstChild) el.namesBride.firstChild.nodeValue = p.names.bride;
       else el.namesBride.textContent = p.names.bride;
     }
-    if (el.namesAnd)   el.namesAnd.textContent   = p.names.and || '&';
+    el.namesAnd && (el.namesAnd.textContent = p.names.and || '&');
     if (el.namesGroom) {
       if (el.namesGroom.firstChild) el.namesGroom.firstChild.nodeValue = p.names.groom;
       else el.namesGroom.textContent = p.names.groom;
     }
-    if (el.namesInline) el.namesInline.dir = (p === HE) ? 'rtl' : 'ltr';
+    el.namesInline && (el.namesInline.dir = (p === HE) ? 'rtl' : 'ltr');
   }
 
   function setRSVP(pack){
     const t=pack.rsvp;
-    if(el.rsvpTitle) el.rsvpTitle.textContent=t.title;
-    if(el.firstName) el.firstName.placeholder=t.first;
-    if(el.lastName)  el.lastName.placeholder=t.last;
-    if(el.email)     el.email.placeholder=t.email;
-    if(el.tel)       el.tel.placeholder=t.tel;
+    el.rsvpTitle && (el.rsvpTitle.textContent=t.title);
+    el.firstName && (el.firstName.placeholder=t.first);
+    el.lastName  && (el.lastName.placeholder=t.last);
+    el.email     && (el.email.placeholder=t.email);
+    el.tel       && (el.tel.placeholder=t.tel);
 
     if(el.presenceSel){
       el.presenceSel.options.length=0;
@@ -482,11 +467,11 @@ document.addEventListener('DOMContentLoaded', function () {
       el.preferenceSel.add(new Option(t.houppaOnly,'0'));
       el.preferenceSel.add(new Option(t.both,'1'));
     }
-    if(el.nbInput) el.nbInput.placeholder=t.nb;
+    el.nbInput && (el.nbInput.placeholder=t.nb);
 
-    if(el.assahaLabel) el.assahaLabel.textContent=t.shuttle;
-    if(el.assahaYes)   el.assahaYes.querySelector('label').lastChild.nodeValue=' '+t.yes;
-    if(el.assahaNo)    el.assahaNo.querySelector('label').lastChild.nodeValue =' '+t.no;
+    el.assahaLabel && (el.assahaLabel.textContent=t.shuttle);
+    el.assahaYes   && (el.assahaYes.querySelector('label').lastChild.nodeValue=' '+t.yes);
+    el.assahaNo    && (el.assahaNo.querySelector('label').lastChild.nodeValue =' '+t.no);
 
     if(el.citySelect){
       el.citySelect.options.length=0;
@@ -495,15 +480,14 @@ document.addEventListener('DOMContentLoaded', function () {
       el.citySelect.add(new Option(t.cityJeru,'jerusalem'));
       el.citySelect.add(new Option(t.cityTLV,'telaviv'));
     }
-    if(el.hint1) el.hint1.textContent=t.hint1;
-    if(el.hint2) el.hint2.textContent=t.hint2;
-    if(el.submitBtn)  el.submitBtn.value=t.submit;
-    if(el.successMsg) el.successMsg.textContent=t.success;
+    el.hint1 && (el.hint1.textContent=t.hint1);
+    el.hint2 && (el.hint2.textContent=t.hint2);
+    el.submitBtn  && (el.submitBtn.value=t.submit);
+    el.successMsg && (el.successMsg.textContent=t.success);
 
     const messageTa = document.querySelector('textarea[name="message"]');
     if (messageTa) messageTa.placeholder = t.message;
 
-    // Enfants (labels & select)
     const kidsLbl = document.getElementById('childrenLabel');
     if (kidsLbl) kidsLbl.textContent = t.kidsQuestion;
     const sel = document.getElementById('kidsCountSelect');
@@ -515,7 +499,6 @@ document.addEventListener('DOMContentLoaded', function () {
       for (let i=1;i<=6;i++) sel.add(new Option(String(i), String(i)));
       if ([...sel.options].some(o=>o.value===cur)) sel.value = cur;
     }
-    // placeholders si déjà générés
     document.querySelectorAll('.kid-row').forEach((row, idx)=>{
       const i = idx+1;
       const [f,l,a] = row.querySelectorAll('input');
@@ -527,7 +510,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function setLang(lang){
     const P=(lang==='he')?HE:FR;
-
     root.setAttribute('data-lang', lang);
     document.documentElement.setAttribute('lang', lang==='he'?'he':'fr');
     document.documentElement.setAttribute('dir',  lang==='he'?'rtl':'ltr');
@@ -535,56 +517,32 @@ document.addEventListener('DOMContentLoaded', function () {
     card.classList.toggle('he-mode', lang==='he');
     rsvp.classList.toggle('he-mode', lang==='he');
 
-    if(el.enterBtn){ el.enterBtn.textContent=P.enterBtn; el.enterBtn.dir=(lang==='he')?'rtl':'ltr'; }
+    el.enterBtn && (el.enterBtn.textContent=P.enterBtn, el.enterBtn.dir=(lang==='he')?'rtl':'ltr');
+    setHero(P); setCountdownLabels(P); setNames(P);
 
-    setHero(P);
-    setCountdownLabels(P);
-    setNames(P);
+    el.houppaTitle   && (el.houppaTitle.innerHTML   = P.houppaTitle);
+    el.invitationTop && (el.invitationTop.innerHTML = P.invitationTop);
+    el.invitationBottom && (el.invitationBottom.innerHTML = P.invitationBottom);
 
-    // Titre Houppa : gère FR et HE si les deux éléments existent
-    if (lang === 'he') {
-      if (el.houppaTitleHe) el.houppaTitleHe.innerHTML = P.houppaTitle;
-      if (el.houppaTitle)   el.houppaTitle.innerHTML   = FR.houppaTitle; // maintient le FR sur l'élément FR
-    } else {
-      if (el.houppaTitle)   el.houppaTitle.innerHTML   = P.houppaTitle;
-      if (el.houppaTitleHe) el.houppaTitleHe.innerHTML = HE.houppaTitle;
-    }
-
-    if(el.invitationTop)   el.invitationTop.innerHTML = P.invitationTop;
-
-    // Ligne "à la Houppa…" : cible FR/HE séparément si dispo
-    if (lang === 'he') {
-      if (el.invitationBottomHe) el.invitationBottomHe.innerHTML = P.invitationBottom;
-      else if (el.invitationBottom) el.invitationBottom.innerHTML = P.invitationBottom;
-    } else {
-      if (el.invitationBottomFr) el.invitationBottomFr.innerHTML = P.invitationBottom;
-      else if (el.invitationBottom) el.invitationBottom.innerHTML = P.invitationBottom;
-    }
-
-    // Réception : texte ou masqué selon la langue
     if (el.reception){
       if (P.reception && P.reception.trim()){
-        el.reception.textContent = P.reception;
-        el.reception.style.display = '';
-      } else {
-        el.reception.textContent = '';
-        el.reception.style.display = 'none';
-      }
+        el.reception.textContent = P.reception; el.reception.style.display = '';
+      } else { el.reception.textContent = ''; el.reception.style.display = 'none'; }
     }
 
-    if(el.placeLine) el.placeLine.innerHTML = P.placeLine;
-    if(el.timings)   el.timings.innerHTML   = P.timings;
-    if(el.dedic)     el.dedic.innerHTML     = P.dedic;
+    el.placeLine && (el.placeLine.innerHTML = P.placeLine);
+    el.timings   && (el.timings.innerHTML   = P.timings);
+    el.dedic     && (el.dedic.innerHTML     = P.dedic);
 
     setParents(el.leftLines,  P.parentsLeft);
     setParents(el.rightLines, P.parentsRight);
 
-    if(el.navAccueil) el.navAccueil.textContent=P.nav.accueil;
-    if(el.navHouppa)  el.navHouppa.textContent =P.nav.houppa;
-    if(el.navRSVP)    el.navRSVP.textContent   =P.nav.rsvp;
+    el.navAccueil && (el.navAccueil.textContent=P.nav.accueil);
+    el.navHouppa  && (el.navHouppa.textContent =P.nav.houppa);
+    el.navRSVP    && (el.navRSVP.textContent   =P.nav.rsvp);
 
-    if(el.calBtn)  el.calBtn.textContent  = (lang==='he') ? '📅 הוסף ליומן' : '📅 Ajouter au calendrier';
-    if(el.wazeBtn) el.wazeBtn.textContent = (lang==='he') ? 'פתח ב־Waze'   : 'Ouvrir dans Waze';
+    el.calBtn  && (el.calBtn.textContent  = (lang==='he') ? '📅 הוסף ליומן' : '📅 Ajouter au calendrier');
+    el.wazeBtn && (el.wazeBtn.textContent = (lang==='he') ? 'פתח ב־Waze'   : 'Ouvrir dans Waze');
 
     setRSVP(P);
 
@@ -598,19 +556,11 @@ document.addEventListener('DOMContentLoaded', function () {
   setLang(document.documentElement.getAttribute('data-lang') || 'fr');
 });
 
-// 100vh iOS : variable --vh
+/* ---------- 100vh iOS ---------- */
 function setVh(){ document.documentElement.style.setProperty('--vh', (window.innerHeight*0.01) + 'px'); }
 setVh(); window.addEventListener('resize', setVh); window.addEventListener('orientationchange', setVh);
 
-// Verrouillage du scroll quand le menu est ouvert (si tu ajoutes/retire .is-open sur .menu)
-const menu = document.querySelector('.menu');
-function toggleBodyLock(){ document.body.classList.toggle('nav-open', menu?.classList.contains('is-open')); }
-
-// Si tu as un switch FR/HE : mets la direction du document
-function setDir(lang){ document.documentElement.setAttribute('dir', lang === 'he' ? 'rtl' : 'ltr'); }
-// Exemple : setDir('fr'); // ou setDir('he');
-
-// (Option debug) surligne les éléments qui débordent en largeur
+/* ---------- (Option) debug overflow ---------- */
 function debugOverflow(){
   const w = document.documentElement.clientWidth;
   document.querySelectorAll('*').forEach(el=>{
@@ -618,9 +568,4 @@ function debugOverflow(){
     if(r.right - w > 1){ el.style.outline = '2px solid red'; }
   });
 }
-function doGet(e) {
-  return ContentService.createTextOutput('OK')
-    .setMimeType(ContentService.MimeType.TEXT);
-}
-
-// debugOverflow(); // décommente si besoin temporairement
+// debugOverflow();
