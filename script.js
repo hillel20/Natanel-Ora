@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
   };
   window.addEventListener('scroll', onScrollProgress); onScrollProgress();
 
-  /* ---------- Reveal (fallback) ---------- */
+  /* ---------- Reveal ---------- */
   const reveals = document.querySelectorAll('.reveal');
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
@@ -216,20 +216,19 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   /* ---------- Envoi → Google Sheets + fallback mail ---------- */
-const SHEET_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz1Qx7knSr0Vj24WEjc7LgDX04p_Wgdbp_Yu2Q-uoZRTbZV97MLtl-W0NBQ3ddhHNc2/exec';
-
+  // ⚠️ Mets ici TON URL /exec actuelle (si tu redéploies, elle change)
+  const SHEET_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxJ-XwTf3YnaT7hoWxAn3Aaix786-PhzMaX-nmtGg4/exec';
 
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     errMsg.style.display = 'none';
 
-    // Données
+    // 1) FormData (pas de headers) → évite le preflight CORS
     const fd = new FormData(form);
-    const payload = Object.fromEntries(fd.entries());
-    payload.lang = document.documentElement.getAttribute('data-lang') || 'fr';
-    payload.user_agent = navigator.userAgent || '';
+    fd.append('lang', document.documentElement.getAttribute('data-lang') || 'fr');
+    fd.append('user_agent', navigator.userAgent || '');
 
-    // Enfants
+    // Enfants → en JSON-texte dans un seul champ
     const kids = [];
     document.querySelectorAll('#kidsList .kid-row').forEach(row => {
       const first = row.querySelector('input[name^="kid_first_"]')?.value?.trim();
@@ -237,27 +236,27 @@ const SHEET_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz1Qx7knSr0Vj2
       const age   = row.querySelector('input[name^="kid_age_"]')?.value?.trim();
       if (first || last || age) kids.push({ first, last, age });
     });
-    payload.kids = kids;
-    payload.kids_count = payload.kids_count || kids.length;
+    fd.append('kids', JSON.stringify(kids));
+    if (!fd.get('kids_count')) fd.append('kids_count', String(kids.length));
 
     try {
-      // pas de Content-Type pour éviter un préflight strict
-      const res = await fetch(SHEET_WEBAPP_URL, { method: 'POST', body: JSON.stringify(payload) });
-      const text = await res.text();
-      let j = {}; try { j = JSON.parse(text); } catch {}
-      if (res.ok && j.ok !== false) {
+      const res = await fetch(SHEET_WEBAPP_URL, { method: 'POST', body: fd });
+      if (res.ok) {
         document.getElementById('confirmation-message').style.display = 'block';
         form.reset(); togglePresence(); villeWrapper.classList.add('hidden');
         const kidsListEl = document.getElementById('kidsList'); if (kidsListEl) kidsListEl.innerHTML = '';
         return;
       }
-      throw new Error(`HTTP ${res.status} ${text}`);
+      throw new Error(`HTTP ${res.status}`);
     } catch (err) {
       // Fallback mailto (libellés propres + Ashdod)
-      const lang = (payload.lang === 'he') ? 'he' : 'fr';
+      const lang = (document.documentElement.getAttribute('data-lang') === 'he') ? 'he' : 'fr';
       const cityMap = (lang === 'he')
-        ? { jerusalem:'ירושלים', telaviv:'אשדוד' }
-        : { jerusalem:'Jérusalem', telaviv:'Ashdod' };
+        ? { jerusalem:'ירושלים', ashdod:'אשדוד', telaviv:'אשדוד' } // compat anciennes valeurs
+        : { jerusalem:'Jérusalem', ashdod:'Ashdod', telaviv:'Ashdod' };
+
+      // Reconstruire un mini-objet depuis fd (lisible pour l’email)
+      const payload = Object.fromEntries(fd.entries());
 
       const label = (k) => ({
         first_name: lang==='he'?'שם פרטי':'Prénom',
@@ -479,7 +478,7 @@ const SHEET_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz1Qx7knSr0Vj2
       el.citySelect.add(new Option(t.cityPlaceholder,'',true,true));
       el.citySelect.options[0].disabled=true;
       el.citySelect.add(new Option(t.cityJeru,'jerusalem'));
-      el.citySelect.add(new Option(t.cityTLV,'telaviv'));
+      el.citySelect.add(new Option(t.cityTLV,'ashdod'));   // ← valeur corrigée
     }
     el.hint1 && (el.hint1.textContent=t.hint1);
     el.hint2 && (el.hint2.textContent=t.hint2);
@@ -511,12 +510,12 @@ const SHEET_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz1Qx7knSr0Vj2
 
   function setLang(lang){
     const P=(lang==='he')?HE:FR;
-    root.setAttribute('data-lang', lang);
+    document.documentElement.setAttribute('data-lang', lang);
     document.documentElement.setAttribute('lang', lang==='he'?'he':'fr');
     document.documentElement.setAttribute('dir',  lang==='he'?'rtl':'ltr');
-    body.classList.toggle('he-mode', lang==='he');
-    card.classList.toggle('he-mode', lang==='he');
-    rsvp.classList.toggle('he-mode', lang==='he');
+    document.body.classList.toggle('he-mode', lang==='he');
+    document.getElementById('houppa-soiree')?.classList.toggle('he-mode', lang==='he');
+    document.getElementById('formulaire')?.classList.toggle('he-mode', lang==='he');
 
     el.enterBtn && (el.enterBtn.textContent=P.enterBtn, el.enterBtn.dir=(lang==='he')?'rtl':'ltr');
     setHero(P); setCountdownLabels(P); setNames(P);
