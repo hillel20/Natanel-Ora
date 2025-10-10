@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   /* ---------- Envoi → Google Sheets + fallback mail ---------- */
-const SHEET_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwLIYStKAOH7qF45YeHJyCirG0gIMsCaTs0oEPhdvFt65ZXXRzTaVvIN5i-c6eG-8le/exec';
+const SHEET_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz1Qx7knSr0Vj24WEjc7LgDX04p_Wgdbp_Yu2Q-uoZRTbZV97MLtl-W0NBQ3ddhHNc2/exec';
 
 
   form?.addEventListener('submit', async (e) => {
