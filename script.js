@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function () {
       nb:'Nombre total de personnes (vous inclus) *',
       hint1:'Merci d’indiquer un seul nom et prénom ici.',
       shuttle:'Souhaitez-vous une navette ?', yes:'Oui', no:'Non',
-      cityPlaceholder:'Depuis quelle ville ?', cityAshdod:'Ashdod', cityNetanya:'Netanya',
+      cityPlaceholder:'Depuis quelle ville ?', cityAshdod:'Ashdod', cityJerusalem:'Jérusalem',
       message:'Un Mazal Tov pour les mariés ?', submit:'Envoyer',
       kidsQuestion:'Des enfants vous accompagnent ?', kidsHowMany:'Combien d’enfants ?',
       kidsNote:"N’écrivez pas votre nom ici — seulement ceux qui vous accompagnent.",
@@ -231,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function () {
       nb:'מספר נוכחים (כולל אותך) *',
       hint1:'נא להזין שם פרטי ושם משפחה אחד בלבד.',
       shuttle:'מעוניינים בהסעה?', yes:'כן', no:'לא',
-      cityPlaceholder:'מאיזו עיר?', cityAshdod:'אשדוד', cityNetanya:'נתניה',
+      cityPlaceholder:'מאיזו עיר?', cityAshdod:'אשדוד', cityJerusalem:'ירושלים',
       message:'ברכת מזל טוב לזוג?', submit:'שליחה',
       kidsQuestion:'ילדים מגיעים איתכם?', kidsHowMany:'כמה ילדים?',
       kidsNote:'אל תכתבו כאן את השם שלכם — רק של המגיעים איתכם.',
@@ -370,13 +370,14 @@ document.addEventListener('DOMContentLoaded', function () {
     if(el.assahaYes){ const lab = el.assahaYes.querySelector('label'); if (lab) lab.textContent = t.yes; }
     if(el.assahaNo){  const lab = el.assahaNo.querySelector('label');  if (lab) lab.textContent = t.no;  }
 
-    if(el.citySelect){
-      el.citySelect.options.length=0;
-      el.citySelect.add(new Option(t.cityPlaceholder,'',true,true));
-      el.citySelect.options[0].disabled=true;
-      el.citySelect.add(new Option(t.cityAshdod,'ashdod'));
-      el.citySelect.add(new Option(t.cityNetanya,'netanya'));
-    }
+     if (el.citySelect){
+        el.citySelect.options.length = 0;
+        el.citySelect.add(new Option(t.cityPlaceholder, '', true, true));
+        el.citySelect.options[0].disabled = true;
+        // valeurs envoyées: ashdod / jerusalem
+        el.citySelect.add(new Option(t.cityAshdod, 'ashdod'));
+        el.citySelect.add(new Option(t.cityJerusalem, 'jerusalem'));
+     }
 
     if(el.hint1) el.hint1.textContent=t.hint1;
     if(el.hint2) el.hint2.textContent=t.hint2 || '';
@@ -585,9 +586,10 @@ document.addEventListener('DOMContentLoaded', function () {
     } catch (err) {
       // Fallback mailto (assaha כן/לא, villes אשדוד/נתניה)
       const lang = (payload.lang === 'he') ? 'he' : 'fr';
-      const cityMap = (lang === 'he')
-        ? { ashdod:'אשדוד', netanya:'נתניה' }
-        : { ashdod:'Ashdod', netanya:'Netanya' };
+       const cityMap = (lang === 'he')
+          ? { ashdod:'אשדוד', jerusalem:'ירושלים' }
+          : { ashdod:'Ashdod', jerusalem:'Jérusalem' };
+
 
       const label = (k) => ({
         first_name: lang==='he'?'שם פרטי':'Prénom',
