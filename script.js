@@ -1,5 +1,5 @@
 /* =========================================================
-   NATANEL & ORA — JS (FR/HE)
+   NATANEL & ORA — JS (FR/HE) — VALIDATION + I18N + 1 SUBMISSION
    ========================================================= */
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -9,17 +9,17 @@ document.addEventListener('DOMContentLoaded', function () {
   const navLinks  = document.getElementById('nav-links');
 
   const onScrollNav = () => {
-    if (window.scrollY > 20) { navbar.classList.add('scrolled'); navbar.classList.remove('transparent'); }
-    else { navbar.classList.add('transparent'); navbar.classList.remove('scrolled'); }
+    if (window.scrollY > 20) { navbar?.classList.add('scrolled'); navbar?.classList.remove('transparent'); }
+    else { navbar?.classList.add('transparent'); navbar?.classList.remove('scrolled'); }
   };
   onScrollNav(); window.addEventListener('scroll', onScrollNav);
 
   hamburger?.addEventListener('click', () => {
     hamburger.classList.toggle('open');
-    navLinks.classList.toggle('active');
+    navLinks?.classList.toggle('active');
   });
   navLinks?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-    hamburger.classList.remove('open'); navLinks.classList.remove('active');
+    hamburger?.classList.remove('open'); navLinks?.classList.remove('active');
   }));
 
   /* ---------- Scroll progress ---------- */
@@ -27,11 +27,11 @@ document.addEventListener('DOMContentLoaded', function () {
   const onScrollProgress = () => {
     const h = document.documentElement;
     const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
-    progress.style.width = `${scrolled}%`;
+    if (progress) progress.style.width = `${scrolled}%`;
   };
   window.addEventListener('scroll', onScrollProgress); onScrollProgress();
 
-  /* ---------- Reveal ---------- */
+  /* ---------- Reveal (fallback) ---------- */
   const reveals = document.querySelectorAll('.reveal');
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
   /* ---------- AOS ---------- */
   if (window.AOS) AOS.init({ once: true });
 
-  /* ---------- CircleType (arc title) ---------- */
+  /* ---------- CircleType ---------- */
   const arcEl = document.getElementById('arc-title');
   if (arcEl && window.CircleType) {
     const ct = new CircleType(arcEl);
@@ -68,10 +68,10 @@ document.addEventListener('DOMContentLoaded', function () {
       const h = Math.floor(diff / 3600000);   diff -= h * 3600000;
       const m = Math.floor(diff / 60000);     diff -= m * 60000;
       const s = Math.floor(diff / 1000);
-      daysEl.textContent  = String(d);
-      hoursEl.textContent = String(h).padStart(2, '0');
-      minsEl.textContent  = String(m).padStart(2, '0');
-      secsEl.textContent  = String(s).padStart(2, '0');
+      if (daysEl)  daysEl.textContent  = String(d);
+      if (hoursEl) hoursEl.textContent = String(h).padStart(2, '0');
+      if (minsEl)  minsEl.textContent  = String(m).padStart(2, '0');
+      if (secsEl)  secsEl.textContent  = String(s).padStart(2, '0');
     };
     tick(); setInterval(tick, 1000);
   }
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const music    = document.getElementById('backgroundMusic');
   const enterBtn = document.getElementById('enterSite');
 
-  const toggleBack = () => { backBtn.style.display = window.scrollY > 300 ? 'block' : 'none'; };
+  const toggleBack = () => { if(backBtn) backBtn.style.display = window.scrollY > 300 ? 'block' : 'none'; };
   toggleBack(); window.addEventListener('scroll', toggleBack);
   backBtn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
@@ -117,16 +117,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const title    = 'Houppa — Natanël & Ora';
     const details  = 'Kabalat Panim à 17h45 • Houppa à 18h45 précise';
     const location = 'אמרלד — הגן השקוף, בית שמש, ישראל';
-
     const tz    = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Jerusalem';
     const start = new Date('2026-01-07T18:45:00');
     const end   = new Date('2026-01-07T22:45:00');
 
     const pad = (n) => String(n).padStart(2,'0');
-    const fmtLocal = (d) => (
-      d.getFullYear() + pad(d.getMonth()+1) + pad(d.getDate()) +
-      'T' + pad(d.getHours()) + pad(d.getMinutes()) + pad(d.getSeconds())
-    );
+    const fmtLocal = (d) => (d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'T'+pad(d.getHours())+pad(d.getMinutes())+pad(d.getSeconds()));
     const dates = `${fmtLocal(start)}/${fmtLocal(end)}`;
 
     const url = new URL('https://calendar.google.com/calendar/render');
@@ -141,164 +137,124 @@ document.addEventListener('DOMContentLoaded', function () {
     window.open(url.toString(), '_blank', 'noopener');
   });
 
-  /* ---------- RSVP Logic ---------- */
+  /* ---------- RSVP ---------- */
   const form            = document.getElementById('rsvpForm');
   const presenceSelect  = document.getElementById('presenceSelect');
   const comeTo          = document.getElementById('come_to');
   const preferenceSelect= document.getElementById('preferenceSelect');
   const nombreWrapper   = document.getElementById('nombre-wrapper');
+  const nbInput         = document.querySelector('input[name="nb_personne"]');
+
   const assahaRadios    = document.querySelectorAll('input[name="assaha"]');
   const villeWrapper    = document.getElementById('villeAssahaWrapper');
+  const citySelect      = villeWrapper?.querySelector('select');
+
   const okMsg           = document.getElementById('confirmation-message');
+  const okMsgStrong     = okMsg?.querySelector('strong');
   const errMsg          = document.getElementById('error-message');
 
-  // Enfants
   const childrenSection  = document.getElementById('childrenSection');
   const kidsRadios       = document.querySelectorAll('input[name="has_kids"]');
   const kidsCountWrapper = document.getElementById('kidsCountWrapper');
   const kidsCountSelect  = document.getElementById('kidsCountSelect');
   const kidsList         = document.getElementById('kidsList');
 
-  const togglePresence = () => {
-    const val = presenceSelect?.value;
-    const coming = val === '1';
-    comeTo.classList.toggle('hidden', !coming);
-    nombreWrapper.classList.toggle('hidden', !coming);
-    childrenSection?.classList.toggle('hidden', !coming);
+  const SUBMIT_LOCK_KEY = 'rsvp_submitted';
 
-    if (!coming && childrenSection) {
-      const no = document.querySelector('input[name="has_kids"][value="0"]');
-      if (no) no.checked = true;
-      kidsCountWrapper?.classList.add('hidden');
-      kidsList?.classList.add('hidden');
-      if (kidsList) kidsList.innerHTML = '';
-      if (kidsCountSelect) kidsCountSelect.selectedIndex = 0;
+  /* ---------- Lang packs ---------- */
+  const FR = {
+    hero:  { bride: 'Natanel', and: '&', groom: 'Ora' },
+    names: { bride: 'Natanel', and: '&', groom: 'Ora' },
+    enterBtn: 'Voir l’invitation',
+    countdown: { days: 'Jours', hours: 'Heures', minutes: 'Minutes', seconds: 'Secondes' },
+    houppaTitle: 'Houppa &amp; Soirée',
+    invitationTop: 'Remercient <strong>Hachem</strong> d’avoir la joie de vous convier <br>au mariage de leurs enfants et petits-enfants,',
+    invitationBottom: 'à la <strong>Houppa</strong> qui aura lieu le <span class="accent"><strong>7 janvier 2026 — 18 Tevet 5786.</strong></span>',
+    reception: 'Ainsi qu’à la réception qui suivra.',
+    placeLine: "אמרלד —הגן השקוף בית שמש, ישראל",
+    timings:   '<span class="accent">Kabalat Panim à 17h45</span>, <span class="accent">Houppa à 18h45 précise</span>',
+    dedic:     'Une pensée particulière pour nos chers grand parents : <br> Mme&nbsp;Ruth&nbsp;Harrouch, M.&nbsp;Serge&nbsp;Yossef&nbsp;Temim, et M.&nbsp;Samuel&nbsp;Haim&nbsp;Besnainou.',
+    parentsLeft:  ['Mr &amp; Mme Dov et Sarah Harrouch','Mr Michel Harrouch','Mme Aline Temim'],
+    parentsRight: ['Mr &amp; Mme Yossef et Nathalie Besnainou','Mr &amp; Mme Adolphe Mahlouf &amp; Mireille Tapiero','Mme Jasmine Besnainou'],
+    nav: { accueil: 'Accueil', houppa: 'Houppa & Soirée', rsvp: 'RSVP' },
+    rsvp: {
+      title:'Confirmez votre présence',
+      first:'Prénom *', last:'Nom *', email:'Votre email', tel:'Votre téléphone *',
+      presenceLabel:'Je confirme ma présence', presenceYes:'Oui, je serai présent(e) 🎉', presenceNo:'Non, je ne peux pas venir 😢',
+      comeTo:'Je viens pour :', houppaOnly:'Uniquement à la houppa', both:'Houppa & soirée',
+      nb:'Nombre total de personnes (vous inclus) *',
+      hint1:'Merci d’indiquer un seul nom et prénom ici.',
+      shuttle:'Souhaitez-vous une navette ?', yes:'Oui', no:'Non',
+      cityPlaceholder:'Depuis quelle ville ?', cityAshdod:'Ashdod', cityNetanya:'Netanya',
+      message:'Un Mazal Tov pour les mariés ?', submit:'Envoyer',
+      kidsQuestion:'Des enfants vous accompagnent ?', kidsHowMany:'Combien d’enfants ?',
+      kidsNote:"N’écrivez pas votre nom ici — seulement ceux qui vous accompagnent.",
+      kidFirst: idx => `Prénom enfant ${idx}`,
+      kidAge:   idx => `Âge enfant ${idx} (1–13)`,
+      success:'Message envoyé avec succès 💌',
+      errors:{
+        all:'Merci de remplir les champs obligatoires.',
+        first:'Prénom obligatoire.',
+        last:'Nom obligatoire.',
+        tel:'Téléphone obligatoire.',
+        presence:'Veuillez indiquer votre présence.',
+        comeTo:'Veuillez choisir “Houppa” ou “Houppa & soirée”.',
+        nb:'Indiquez le nombre total de personnes (≥ 1).',
+        shuttle:'Choisissez Oui/Non pour la navette.',
+        city:'Précisez la ville de navette.',
+        kidsCount:'Indiquez le nombre d’enfants.',
+        kidAge:'Âge des enfants : 1 à 13 ans.',
+      }
     }
   };
-  presenceSelect?.addEventListener('change', togglePresence); togglePresence();
 
-  assahaRadios.forEach(r => r.addEventListener('change', () => {
-    villeWrapper.classList.toggle('hidden', r.value !== '1' || !r.checked);
-  }));
-  kidsRadios.forEach(r => r.addEventListener('change', () => {
-    const yes = r.value === '1' && r.checked;
-    kidsCountWrapper?.classList.toggle('hidden', !yes);
-    kidsList?.classList.toggle('hidden', !yes);
-    if (!yes && kidsList) {
-      kidsList.innerHTML = '';
-      if (kidsCountSelect) kidsCountSelect.selectedIndex = 0;
-    }
-  }));
-
-  function tKid(which, i){
-    const lang = document.documentElement.getAttribute('data-lang') === 'he' ? 'he' : 'fr';
-    const pack = (lang === 'he') ? HE : FR;
-    if (which === 'first') return pack.rsvp.kidFirst(i);
-    if (which === 'last')  return pack.rsvp.kidLast ? pack.rsvp.kidLast(i) : (lang==='he'?'שם משפחה ילד '+i:'Nom enfant '+i);
-    if (which === 'age')   return pack.rsvp.kidAge(i);
-    return '';
-  }
-  kidsCountSelect?.addEventListener('change', () => {
-    const n = parseInt(kidsCountSelect.value || '0', 10);
-    if (!kidsList) return;
-    kidsList.innerHTML = '';
-    for (let i = 1; i <= n; i++) {
-      const row = document.createElement('div');
-      row.className = 'kid-row';
-      row.innerHTML = `
-        <input type="text"   name="kid_first_${i}" placeholder="${tKid('first', i)}">
-        <input type="text"   name="kid_last_${i}"  placeholder="${tKid('last', i)}">
-        <input type="number" name="kid_age_${i}"   class="kid-age" min="0" max="13" placeholder="${tKid('age', i)}">
-      `;
-      kidsList.appendChild(row);
-    }
-    kidsList.classList.remove('hidden');
-  });
-
-  /* ---------- Envoi → Google Sheets + fallback mail ---------- */
-  // ⚠️ Mets ici TON URL /exec actuelle (si tu redéploies, elle change)
-  const SHEET_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzcRkS994SuH8mSq3zBYWiyeKWSzVR1t5Q27GBA6sKlSjFFfZyCU4WXl0WLqEwJ7F1o/exec';
-
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    errMsg.style.display = 'none';
-
-    // 1) FormData (pas de headers) → évite le preflight CORS
-    const fd = new FormData(form);
-    fd.append('lang', document.documentElement.getAttribute('data-lang') || 'fr');
-    fd.append('user_agent', navigator.userAgent || '');
-
-    // Enfants → en JSON-texte dans un seul champ
-    const kids = [];
-    document.querySelectorAll('#kidsList .kid-row').forEach(row => {
-      const first = row.querySelector('input[name^="kid_first_"]')?.value?.trim();
-      const last  = row.querySelector('input[name^="kid_last_"]')?.value?.trim();
-      const age   = row.querySelector('input[name^="kid_age_"]')?.value?.trim();
-      if (first || last || age) kids.push({ first, last, age });
-    });
-    fd.append('kids', JSON.stringify(kids));
-    if (!fd.get('kids_count')) fd.append('kids_count', String(kids.length));
-
-    try {
-      const res = await fetch(SHEET_WEBAPP_URL, { method: 'POST', body: fd });
-      if (res.ok) {
-        document.getElementById('confirmation-message').style.display = 'block';
-        form.reset(); togglePresence(); villeWrapper.classList.add('hidden');
-        const kidsListEl = document.getElementById('kidsList'); if (kidsListEl) kidsListEl.innerHTML = '';
-        return;
+  const HE = {
+    hero:  { bride: ' נתנאל', and: '-', groom: 'אורה מרים' },
+    names: { bride: 'נתנאל', and: '&', groom: '& אורה מרים' },
+    enterBtn: 'לצפייה בהזמנה',
+    countdown: { days: 'ימים', hours: 'שעות', minutes: 'דקות', seconds: 'שניות' },
+    houppaTitle: 'חופה',
+    invitationTop: 'מודים לה׳ על הזכות לשמוח ולהזמינכם<br>לחתונת ילדיהם ונכדיהם,',
+    invitationBottom: 'בחופה שתתקיים בע״ה ביום <span class="accent"><strong>7 בינואר 2026</strong></span> — <span class="accent"><strong>י״ח בטבת תשפ״ו</strong></span>.',
+    reception: '',
+    placeLine:  'אמרלד — הגן השקוף · בית שמש, ישראל',
+    timings:    '<span class="accent">קבלת פנים 17:45</span> · <span class="accent">חופה 18:45 בדיוק</span>',
+    dedic:      'אזכרה מיוחדת לסבינו היקרים: <br> גב׳ רות הרוש, מר סרג׳ יוסף תמם ומר שמואל חיים בזננו.',
+    parentsLeft:  ['מר וד״ר דוב ושרה הרוש','מר מיכאל הרוש','גב׳ אלין תמים'],
+    parentsRight: ['מר וגברת יוסף ונטלי בזננו','מר וגברת אדולף מַלְחוּף &amp; מרת מירייל טפיירו','גב׳ יסמין בזננו'],
+    nav: { accueil: 'דף הבית', houppa: 'חופה', rsvp: 'אישור הגעה' },
+    rsvp: {
+      title:'אשרו הגעה',
+      first:'שם פרטי *', last:'שם משפחה *', email:'האימייל שלכם', tel:'טלפון *',
+      presenceLabel:'אישור הגעה', presenceYes:'כן, אגיע 🎉', presenceNo:'לא אוכל להגיע 😢',
+      comeTo:'אני מגיע/ה ל־', houppaOnly:'לחופה בלבד', both:'חופה וערב',
+      nb:'מספר נוכחים (כולל אותך) *',
+      hint1:'נא להזין שם פרטי ושם משפחה אחד בלבד.',
+      shuttle:'מעוניינים בהסעה?', yes:'כן', no:'לא',
+      cityPlaceholder:'מאיזו עיר?', cityAshdod:'אשדוד', cityNetanya:'נתניה',
+      message:'ברכת מזל טוב לזוג?', submit:'שליחה',
+      kidsQuestion:'ילדים מגיעים איתכם?', kidsHowMany:'כמה ילדים?',
+      kidsNote:'אל תכתבו כאן את השם שלכם — רק של המגיעים איתכם.',
+      kidFirst: idx => `שם פרטי ילד ${idx}`,
+      kidAge:   idx => `גיל ילד ${idx} (1–13)`,
+      success:'ההודעה נשלחה בהצלחה 💌',
+      errors:{
+        all:'נא למלא את כל השדות החובה.',
+        first:'שם פרטי חובה.',
+        last:'שם משפחה חובה.',
+        tel:'טלפון חובה.',
+        presence:'נא לציין אם אתם מגיעים.',
+        comeTo:'נא לבחור: לחופה בלבד / חופה וערב.',
+        nb:'נא לציין מספר משתתפים (≥ 1).',
+        shuttle:'נא לבחור אם צריך הסעה.',
+        city:'נא לבחור עיר להסעה.',
+        kidsCount:'נא לציין כמה ילדים.',
+        kidAge:'גיל הילדים חייב להיות בין 1 ל־13.',
       }
-      throw new Error(`HTTP ${res.status}`);
-    } catch (err) {
-      // Fallback mailto (libellés propres + Ashdod)
-      const lang = (document.documentElement.getAttribute('data-lang') === 'he') ? 'he' : 'fr';
-      const cityMap = (lang === 'he')
-        ? { jerusalem:'ירושלים', ashdod:'אשדוד', telaviv:'אשדוד' } // compat anciennes valeurs
-        : { jerusalem:'Jérusalem', ashdod:'Ashdod', telaviv:'Ashdod' };
-
-      // Reconstruire un mini-objet depuis fd (lisible pour l’email)
-      const payload = Object.fromEntries(fd.entries());
-
-      const label = (k) => ({
-        first_name: lang==='he'?'שם פרטי':'Prénom',
-        last_name:  lang==='he'?'שם משפחה':'Nom',
-        email:      'Email',
-        tel:        lang==='he'?'טלפון':'Téléphone',
-        presence:   lang==='he'?'נוכחות':'Présence',
-        come_to:    lang==='he'?'מגיע/ה ל־':'Je viens pour',
-        nb_personne:lang==='he'?'סה״כ משתתפים':'Nb total de personnes',
-        assaha:     lang==='he'?'הסעה':'Navette',
-        ville_assaha: lang==='he'?'עיר להסעה':'Ville navette',
-        message:    lang==='he'?'הודעה':'Message',
-      }[k] || k);
-
-      const display = (k,v) => {
-        if (k==='presence')  return v==='1' ? (lang==='he'?'כן':'Oui') : (lang==='he'?'לא':'Non');
-        if (k==='come_to')   return v==='1' ? (lang==='he'?'חופה וערב':'Houppa & soirée') : (lang==='he'?'לחופה בלבד':'Uniquement houppa');
-        if (k==='assaha')    return v==='1' ? (lang==='he'?'כן':'Oui') : (lang==='he'?'לא':'Non');
-        if (k==='ville_assaha') return cityMap[v] || v;
-        return v;
-      };
-
-      const lines = [];
-      for (const [k,v] of Object.entries(payload)) {
-        if (k==='kids' || k==='kids_count' || k==='lang' || k==='user_agent') continue;
-        if (v != null && String(v).trim() !== '') lines.push(`${label(k)}: ${display(k,v)}`);
-      }
-      if (kids.length) {
-        lines.push((lang==='he'?'ילדים':'Enfants') + ': ' +
-          kids.map(k => `${k.first||''} ${k.last||''} (${k.age||''} ${lang==='he'?'שנים':'ans'})`).join(' | ')
-        );
-      }
-
-      const EMAIL_TO = 'amzallaghillel@gmail.com';
-      const subject  = encodeURIComponent('RSVP — Natanël & Ora');
-      const body     = encodeURIComponent(lines.join('\n'));
-      window.location.href = `mailto:${EMAIL_TO}?subject=${subject}&body=${body}`;
-      document.getElementById('confirmation-message').style.display = 'block';
     }
-  });
+  };
 
-  /* ---------- Switch langue FR/HE ---------- */
+  /* ---------- DOM map for i18n ---------- */
   const root = document.documentElement;
   const body = document.body;
   const card = document.getElementById('houppa-soiree');
@@ -334,124 +290,64 @@ document.addEventListener('DOMContentLoaded', function () {
     lastName:    document.querySelector('input[name="last_name"]'),
     email:       document.querySelector('input[name="email"]'),
     tel:         document.querySelector('input[name="tel"]'),
-    presenceSel: document.getElementById('presenceSelect'),
-    preferenceSel: document.getElementById('preferenceSelect'),
-    nbInput:     document.querySelector('input[name="nb_personne"]'),
+    presenceSel: presenceSelect,
+    preferenceSel: preferenceSelect,
+    nbInput:     nbInput,
     assahaLabel: document.querySelector('#assaha label'),
     assahaYes:   document.querySelector('input[name="assaha"][value="1"]')?.parentElement,
     assahaNo:    document.querySelector('input[name="assaha"][value="0"]')?.parentElement,
-    citySelect:  document.querySelector('#villeAssahaWrapper select'),
+    citySelect:  citySelect,
     hint1:       document.querySelector('.form-hint'),
     hint2:       document.getElementById('preventive_message_2'),
     submitBtn:   document.querySelector('.submit-button'),
-    successMsg:  document.querySelector('#confirmation-message strong'),
+    successMsg:  okMsgStrong,
     calBtn:      document.querySelector('.calendar-button'),
     wazeBtn:     document.getElementById('wazeBtn'),
-    childrenSection: document.getElementById('childrenSection'),
+    childrenSection,
     childrenLabel:   document.getElementById('childrenLabel'),
-    kidsCountWrap:   document.getElementById('kidsCountWrapper'),
-    kidsCountSelect: document.getElementById('kidsCountSelect'),
-    kidsList:        document.getElementById('kidsList'),
+    kidsCountWrap:   kidsCountWrapper,
+    kidsCountSelect: kidsCountSelect,
+    kidsList:        kidsList,
   };
 
-  const FR = {
-    hero:  { bride: 'Natanel', and: '&', groom: 'Ora' },
-    names: { bride: 'Natanel', and: '&', groom: 'Ora' },
-    enterBtn: 'Voir l’invitation',
-    countdown: { days: 'Jours', hours: 'Heures', minutes: 'Minutes', seconds: 'Secondes' },
-    houppaTitle: 'Houppa &amp; Soirée',
-    invitationTop: 'Remercient <strong>Hachem</strong> d’avoir la joie de vous convier <br>au mariage de leurs enfants et petits-enfants,',
-    invitationBottom: 'à la <strong>Houppa</strong> qui aura lieu le <span class="accent"><strong>7 janvier 2026 — 18 Tevet 5786.</strong></span>',
-    reception: 'Ainsi qu’à la réception qui suivra.',
-    placeLine: "אמרלד —הגן השקוף בית שמש, ישראל",
-    timings:   '<span class="accent">Kabalat Panim à 17h45</span>, <span class="accent">Houppa à 18h45 précise</span>',
-    dedic:     'Une pensée particulière pour nos chers grand parents : <br> Mme&nbsp;Ruth&nbsp;Harrouch, M.&nbsp;Serge&nbsp;Yossef&nbsp;Temim, et M.&nbsp;Samuel&nbsp;Haim&nbsp;Besnainou.',
-    parentsLeft:  ['Mr &amp; Mme Dov et Sarah Harrouch','Mr Michel Harrouch','Mme Aline Temim'],
-    parentsRight: ['Mr &amp; Mme Yossef et Nathalie Besnainou','Mr &amp; Mme Adolphe Mahlouf &amp; Mireille Tapiero','Mme Jasmine Besnainou'],
-    nav: { accueil: 'Accueil', houppa: 'Houppa & Soirée', rsvp: 'RSVP' },
-    rsvp: {
-      title:'Confirmez votre présence', first:'Prénom *', last:'Nom *', email:'Votre email', tel:'Votre téléphone *',
-      presenceLabel:'Je confirme ma présence', presenceYes:'Oui, je serai présent(e) 🎉', presenceNo:'Non, je ne peux pas venir 😢',
-      comeTo:'Je viens pour :', houppaOnly:'Uniquement à la houppa', both:'Houppa & soirée',
-      nb:'Nombre total de personnes (vous inclus) *',
-      hint1:'Merci d’indiquer un seul nom et prénom ici.',
-      shuttle:'Souhaitez-vous une navette ?', yes:'Oui', no:'Non',
-      cityPlaceholder:'Depuis quelle ville ?', cityJeru:'Jérusalem', cityTLV:'Ashdod',
-      message:'Un Mazal Tov pour les mariés ?', submit:'Envoyer', success:'Message envoyé avec succès 💌',
-      kidsQuestion:'Des enfants vous accompagnent(ילדים) ?',
-      kidsHowMany:'Combien d’enfants ?',
-      kidFirst: idx => `Prénom enfant ${idx}`,
-      kidLast:  idx => `Nom enfant ${idx}`,
-      kidAge:   idx => `Âge enfant ${idx}`,
-    }
-  };
-
-  const HE = {
-    hero:  { bride: ' נתנאל', and: '-', groom: 'אורה מרים' },
-    names: { bride: 'נתנאל', and: '&', groom: '& אורה מרים' },
-    enterBtn: 'לצפייה בהזמנה',
-    countdown: { days: 'ימים', hours: 'שעות', minutes: 'דקות', seconds: 'שניות' },
-    houppaTitle: 'חופה',
-    invitationTop: 'מודים לה׳ על הזכות לשמוח ולהזמינכם<br>לחתונת ילדיהם ונכדיהם,',
-    invitationBottom: 'בחופה שתתקיים בע״ה ביום <span class="accent"><strong>7 בינואר 2026</strong></span> — <span class="accent"><strong>י״ח בטבת תשפ״ו</strong></span>.',
-    reception: '',
-    placeLine:  'אמרלד — הגן השקוף · בית שמש, ישראל',
-    timings:    '<span class="accent">קבלת פנים 17:45</span> · <span class="accent">חופה 18:45 בדיוק</span>',
-    dedic:      'אזכרה מיוחדת לסבינו היקרים: <br> גב׳ רות הרוש, מר סרג׳ יוסף תמם ומר שמואל חיים בזננו.',
-    parentsLeft:  ['מר וד״ר דוב ושרה הרוש','מר מיכאל הרוש','גב׳ אלין תמים'],
-    parentsRight: ['מר וגברת יוסף ונטלי בזננו','מר וגברת אדולף מַלְחוּף &amp; מרת מירייל טפיירו','גב׳ יסמין בזננו'],
-    nav: { accueil: 'דף הבית', houppa: 'חופה', rsvp: 'אישור הגעה' },
-    cardNames: { left: 'נתנאל', right: 'אורה מרים', amp: '־', underLeft: '', underRight: '' },
-    rsvp: {
-      title:'אשרו הגעה', first:'שם פרטי *', last:'שם משפחה *', email:'האימייל שלכם', tel:'טלפון *',
-      presenceLabel:'אישור הגעה', presenceYes:'כן, אגיע 🎉', presenceNo:'לא אוכל להגיע 😢',
-      comeTo:'אני מגיע/ה ל־', houppaOnly:'לחופה בלבד', both:'חופה וערב',
-      nb:'מספר נוכחים (כולל אותך) *',
-      hint1:'נא להזין שם פרטי ושם משפחה אחד בלבד.',
-      shuttle:'מעוניינים בהסעה?', yes:'כן', no:'לא',
-      cityPlaceholder:'מאיזו עיר?', cityJeru:'ירושלים', cityTLV:'אשדוד',
-      message:'ברכת מזל טוב לזוג?', submit:'שליחה', success:'ההודעה נשלחה בהצלחה 💌',
-      kidsQuestion:'ילדים מגיעים איתכם?',
-      kidsHowMany:'כמה ילדים?',
-      kidFirst: idx => `שם פרטי ילד ${idx}`,
-      kidLast:  idx => `שם משפחה ילד ${idx}`,
-      kidAge:   idx => `גיל ילד ${idx}`,
-    }
-  };
-
-  /* ---------- Helpers + apply lang ---------- */
+  /* ---------- Helpers i18n ---------- */
   function setParents(lines, arr){ lines.forEach((n,i)=>{ if(arr[i]) n.innerHTML = arr[i]; }); }
   function setHero(p){
-    el.heroBride && (el.heroBride.textContent = p.hero.bride);
-    el.heroAnd   && (el.heroAnd.textContent   = p.hero.and);
-    el.heroGroom && (el.heroGroom.textContent = p.hero.groom);
+    if(el.heroBride) el.heroBride.textContent = p.hero.bride;
+    if(el.heroAnd)   el.heroAnd.textContent   = p.hero.and;
+    if(el.heroGroom) el.heroGroom.textContent = p.hero.groom;
   }
   function setCountdownLabels(p){
-    el.cdDays  && (el.cdDays.textContent  = p.countdown.days);
-    el.cdHours && (el.cdHours.textContent = p.countdown.hours);
-    el.cdMins  && (el.cdMins.textContent  = p.countdown.minutes);
-    el.cdSecs  && (el.cdSecs.textContent  = p.countdown.seconds);
+    if(el.cdDays)  el.cdDays.textContent  = p.countdown.days;
+    if(el.cdHours) el.cdHours.textContent = p.countdown.hours;
+    if(el.cdMins)  el.cdMins.textContent  = p.countdown.minutes;
+    if(el.cdSecs)  el.cdSecs.textContent  = p.countdown.seconds;
   }
   function setNames(p){
     if (el.namesBride) {
       if (el.namesBride.firstChild) el.namesBride.firstChild.nodeValue = p.names.bride;
       else el.namesBride.textContent = p.names.bride;
     }
-    el.namesAnd && (el.namesAnd.textContent = p.names.and || '&');
+    if (el.namesAnd)   el.namesAnd.textContent   = p.names.and || '&';
     if (el.namesGroom) {
       if (el.namesGroom.firstChild) el.namesGroom.firstChild.nodeValue = p.names.groom;
       else el.namesGroom.textContent = p.names.groom;
     }
-    el.namesInline && (el.namesInline.dir = (p === HE) ? 'rtl' : 'ltr');
+    if (el.namesInline) el.namesInline.dir = (p === HE) ? 'rtl' : 'ltr';
+  }
+  function setSubmitLabel(txt){
+    if (!el.submitBtn) return;
+    if (el.submitBtn.tagName.toLowerCase()==='input') el.submitBtn.value = txt;
+    else el.submitBtn.textContent = txt;
   }
 
   function setRSVP(pack){
     const t=pack.rsvp;
-    el.rsvpTitle && (el.rsvpTitle.textContent=t.title);
-    el.firstName && (el.firstName.placeholder=t.first);
-    el.lastName  && (el.lastName.placeholder=t.last);
-    el.email     && (el.email.placeholder=t.email);
-    el.tel       && (el.tel.placeholder=t.tel);
+    if(el.rsvpTitle) el.rsvpTitle.textContent=t.title;
+    if(el.firstName) el.firstName.placeholder=t.first;
+    if(el.lastName)  el.lastName.placeholder=t.last;
+    if(el.email)     el.email.placeholder=t.email;
+    if(el.tel)       el.tel.placeholder=t.tel;
 
     if(el.presenceSel){
       el.presenceSel.options.length=0;
@@ -467,30 +363,34 @@ document.addEventListener('DOMContentLoaded', function () {
       el.preferenceSel.add(new Option(t.houppaOnly,'0'));
       el.preferenceSel.add(new Option(t.both,'1'));
     }
-    el.nbInput && (el.nbInput.placeholder=t.nb);
+    if(el.nbInput) el.nbInput.placeholder=t.nb;
 
-    el.assahaLabel && (el.assahaLabel.textContent=t.shuttle);
-    el.assahaYes   && (el.assahaYes.querySelector('label').lastChild.nodeValue=' '+t.yes);
-    el.assahaNo    && (el.assahaNo.querySelector('label').lastChild.nodeValue =' '+t.no);
+    if(el.assahaLabel) el.assahaLabel.textContent=t.shuttle;
+    // radio labels: assurer le texte “כן/לא” en HE
+    if(el.assahaYes){ const lab = el.assahaYes.querySelector('label'); if (lab) lab.textContent = t.yes; }
+    if(el.assahaNo){  const lab = el.assahaNo.querySelector('label');  if (lab) lab.textContent = t.no;  }
 
     if(el.citySelect){
       el.citySelect.options.length=0;
       el.citySelect.add(new Option(t.cityPlaceholder,'',true,true));
       el.citySelect.options[0].disabled=true;
-      el.citySelect.add(new Option(t.cityJeru,'jerusalem'));
-      el.citySelect.add(new Option(t.cityTLV,'ashdod'));   // ← valeur corrigée
+      el.citySelect.add(new Option(t.cityAshdod,'ashdod'));
+      el.citySelect.add(new Option(t.cityNetanya,'netanya'));
     }
-    el.hint1 && (el.hint1.textContent=t.hint1);
-    el.hint2 && (el.hint2.textContent=t.hint2);
-    el.submitBtn  && (el.submitBtn.value=t.submit);
-    el.successMsg && (el.successMsg.textContent=t.success);
 
+    if(el.hint1) el.hint1.textContent=t.hint1;
+    if(el.hint2) el.hint2.textContent=t.hint2 || '';
+    if(el.successMsg) el.successMsg.textContent=t.success;
+    setSubmitLabel(t.submit);
+
+    // Message placeholder
     const messageTa = document.querySelector('textarea[name="message"]');
     if (messageTa) messageTa.placeholder = t.message;
 
+    // Enfants (labels & select)
     const kidsLbl = document.getElementById('childrenLabel');
     if (kidsLbl) kidsLbl.textContent = t.kidsQuestion;
-    const sel = document.getElementById('kidsCountSelect');
+    const sel = el.kidsCountSelect;
     if (sel){
       const cur = sel.value;
       sel.options.length = 0;
@@ -499,50 +399,274 @@ document.addEventListener('DOMContentLoaded', function () {
       for (let i=1;i<=6;i++) sel.add(new Option(String(i), String(i)));
       if ([...sel.options].some(o=>o.value===cur)) sel.value = cur;
     }
+
+    // Note sous la section enfants (injectée si absente)
+    let kidsNote = document.getElementById('kidsNote');
+    if (!kidsNote) {
+      kidsNote = document.createElement('p');
+      kidsNote.id = 'kidsNote';
+      kidsNote.style.fontSize = '0.9em';
+      kidsNote.style.opacity = '0.8';
+      kidsNote.style.margin = '6px 0 0';
+      (kidsCountWrapper || childrenSection || form).appendChild(kidsNote);
+    }
+    kidsNote.textContent = t.kidsNote;
+
+    // placeholders si déjà générés
     document.querySelectorAll('.kid-row').forEach((row, idx)=>{
       const i = idx+1;
-      const [f,l,a] = row.querySelectorAll('input');
+      const f = row.querySelector('input[name^="kid_first_"]');
+      const a = row.querySelector('input[name^="kid_age_"]');
       if (f) f.placeholder = t.kidFirst(i);
-      if (l) l.placeholder = t.kidLast ? t.kidLast(i) : (pack===HE ? `שם משפחה ילד ${i}` : `Nom enfant ${i}`);
       if (a) a.placeholder = t.kidAge(i);
     });
   }
 
+  /* ---------- UI toggles ---------- */
+  const togglePresence = () => {
+    const coming = presenceSelect?.value === '1';
+    comeTo?.classList.toggle('hidden', !coming);
+    nombreWrapper?.classList.toggle('hidden', !coming);
+    childrenSection?.classList.toggle('hidden', !coming);
+    if (!coming && childrenSection) {
+      const no = document.querySelector('input[name="has_kids"][value="0"]');
+      if (no) no.checked = true;
+      kidsCountWrapper?.classList.add('hidden');
+      kidsList?.classList.add('hidden');
+      if (kidsList) kidsList.innerHTML = '';
+      if (kidsCountSelect) kidsCountSelect.selectedIndex = 0;
+    }
+  };
+  presenceSelect?.addEventListener('change', togglePresence);
+  togglePresence();
+
+  assahaRadios.forEach(r => r.addEventListener('change', () => {
+    villeWrapper?.classList.toggle('hidden', r.value !== '1' || !r.checked);
+  }));
+
+  kidsRadios.forEach(r => r.addEventListener('change', () => {
+    const yes = r.value === '1' && r.checked;
+    kidsCountWrapper?.classList.toggle('hidden', !yes);
+    kidsList?.classList.toggle('hidden', !yes);
+    if (!yes && kidsList) {
+      kidsList.innerHTML = '';
+      if (kidsCountSelect) kidsCountSelect.selectedIndex = 0;
+    }
+  }));
+
+  function tKid(which, i){
+    const lang = document.documentElement.getAttribute('data-lang') === 'he' ? 'he' : 'fr';
+    const pack = (lang === 'he') ? HE : FR;
+    if (which === 'first') return pack.rsvp.kidFirst(i);
+    if (which === 'age')   return pack.rsvp.kidAge(i);
+    return '';
+  }
+
+  kidsCountSelect?.addEventListener('change', () => {
+    const n = parseInt(kidsCountSelect.value || '0', 10);
+    if (!kidsList) return;
+    kidsList.innerHTML = '';
+    for (let i = 1; i <= n; i++) {
+      const row = document.createElement('div');
+      row.className = 'kid-row';
+      row.innerHTML = `
+        <input type="text"   name="kid_first_${i}" placeholder="${tKid('first', i)}">
+        <input type="number" name="kid_age_${i}"   min="1" max="13" step="1" placeholder="${tKid('age', i)}">
+      `;
+      // verrouille 1–13 en live
+      row.querySelector('input[type="number"]').addEventListener('input', (ev)=>{
+        const v = +ev.target.value;
+        if (v<1) ev.target.value = 1;
+        if (v>13) ev.target.value = 13;
+      });
+      kidsList.appendChild(row);
+    }
+    kidsList.classList.remove('hidden');
+  });
+
+  /* ---------- Envoi → Google Sheets + fallback mail ---------- */
+  const SHEET_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz1Qx7knSr0Vj24WEjc7LgDX04p_Wgdbp_Yu2Q-uoZRTbZV97MLtl-W0NBQ3ddhHNc2/exec';
+
+  // validation
+  function pack(){ return (document.documentElement.getAttribute('data-lang') === 'he') ? HE : FR; }
+  function showError(msg){
+    if (!errMsg) return alert(msg);
+    errMsg.textContent = msg;
+    errMsg.style.display = 'block';
+  }
+  function clearError(){ if(errMsg){ errMsg.style.display='none'; errMsg.textContent=''; } }
+
+  function validate(){
+    const t = pack().rsvp.errors;
+
+    const first = (document.querySelector('input[name="first_name"]')?.value||'').trim();
+    const last  = (document.querySelector('input[name="last_name"]')?.value||'').trim();
+    const tel   = (document.querySelector('input[name="tel"]')?.value||'').trim();
+    if (!first) return {ok:false,msg:t.first};
+    if (!last)  return {ok:false,msg:t.last};
+    if (!tel)   return {ok:false,msg:t.tel};
+
+    const presVal = presenceSelect?.value||'';
+    if (presVal!=='1' && presVal!=='0') return {ok:false,msg:t.presence};
+
+    if (presVal==='1'){
+      const pref = preferenceSelect?.value||'';
+      if (pref!=='0' && pref!=='1') return {ok:false,msg:t.comeTo};
+
+      const nb = +(nbInput?.value||0);
+      if (!nb || nb<1) return {ok:false,msg:t.nb};
+
+      const assaha = document.querySelector('input[name="assaha"]:checked')?.value;
+      if (assaha!=='1' && assaha!=='0') return {ok:false,msg:t.shuttle};
+      if (assaha==='1'){
+        const v = citySelect?.value||'';
+        if (!v) return {ok:false,msg:t.city};
+      }
+
+      const hasKids = document.querySelector('input[name="has_kids"]:checked')?.value;
+      if (hasKids==='1'){
+        const cnt = +(kidsCountSelect?.value||0);
+        if (!cnt || cnt<1) return {ok:false,msg:t.kidsCount};
+        // check ages 1–13
+        const ages = [...document.querySelectorAll('#kidsList input[name^="kid_age_"]')].map(i=>+i.value||0);
+        if (!ages.every(a=>a>=1 && a<=13)) return {ok:false,msg:t.kidAge};
+      }
+    }
+    return {ok:true};
+  }
+
+  // seul envoi par session
+  function lockForm(){
+    sessionStorage.setItem(SUBMIT_LOCK_KEY,'1');
+    if (el.submitBtn) { el.submitBtn.disabled = true; el.submitBtn.style.opacity = '0.6'; }
+    [...form.elements].forEach(x=>x.disabled = true);
+  }
+  (function initLock(){
+    if (sessionStorage.getItem(SUBMIT_LOCK_KEY) === '1' && form){
+      lockForm();
+      if (okMsg) okMsg.style.display = 'block';
+    }
+  })();
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearError();
+
+    const v = validate();
+    if (!v.ok) { showError(v.msg || pack().rsvp.errors.all); return; }
+
+    // Données
+    const fd = new FormData(form);
+    const payload = Object.fromEntries(fd.entries());
+    payload.lang = document.documentElement.getAttribute('data-lang') || 'fr';
+    payload.user_agent = navigator.userAgent || '';
+
+    // Enfants
+    const kids = [];
+    document.querySelectorAll('#kidsList .kid-row').forEach(row => {
+      const first = row.querySelector('input[name^="kid_first_"]')?.value?.trim();
+      const age   = row.querySelector('input[name^="kid_age_"]')?.value?.trim();
+      if (first || age) kids.push({ first, age });
+    });
+    payload.kids = kids;
+    payload.kids_count = payload.kids_count || kids.length;
+
+    try {
+      // Pas de Content-Type pour éviter un préflight strict
+      const res = await fetch(SHEET_WEBAPP_URL, { method: 'POST', body: JSON.stringify(payload) });
+      const text = await res.text();
+      let j = {}; try { j = JSON.parse(text); } catch {}
+      if (res.ok && j.ok !== false) {
+        if (okMsg) okMsg.style.display = 'block';
+        lockForm();
+        return;
+      }
+      throw new Error(`HTTP ${res.status} ${text}`);
+    } catch (err) {
+      // Fallback mailto (assaha כן/לא, villes אשדוד/נתניה)
+      const lang = (payload.lang === 'he') ? 'he' : 'fr';
+      const cityMap = (lang === 'he')
+        ? { ashdod:'אשדוד', netanya:'נתניה' }
+        : { ashdod:'Ashdod', netanya:'Netanya' };
+
+      const label = (k) => ({
+        first_name: lang==='he'?'שם פרטי':'Prénom',
+        last_name:  lang==='he'?'שם משפחה':'Nom',
+        email:      'Email',
+        tel:        lang==='he'?'טלפון':'Téléphone',
+        presence:   lang==='he'?'נוכחות':'Présence',
+        come_to:    lang==='he'?'אני מגיע/ה ל־':'Je viens pour',
+        nb_personne:lang==='he'?'סה״כ משתתפים':'Nb total de personnes',
+        assaha:     lang==='he'?'הסעה':'Navette',
+        ville_assaha: lang==='he'?'עיר להסעה':'Ville navette',
+        message:    lang==='he'?'הודעה':'Message',
+      }[k] || k);
+
+      const display = (k,v) => {
+        if (k==='presence')  return v==='1' ? (lang==='he'?'כן':'Oui') : (lang==='he'?'לא':'Non');
+        if (k==='come_to')   return v==='1' ? (lang==='he'?'חופה וערב':'Houppa & soirée') : (lang==='he'?'לחופה בלבד':'Uniquement houppa');
+        if (k==='assaha')    return v==='1' ? (lang==='he'?'כן':'Oui') : (lang==='he'?'לא':'Non');
+        if (k==='ville_assaha') return cityMap[v] || v;
+        return v;
+      };
+
+      const lines = [];
+      for (const [k,v] of Object.entries(payload)) {
+        if (k==='kids' || k==='kids_count' || k==='lang' || k==='user_agent') continue;
+        if (v != null && String(v).trim() !== '') lines.push(`${label(k)}: ${display(k,v)}`);
+      }
+      if (kids.length) {
+        lines.push((lang==='he'?'ילדים':'Enfants') + ': ' +
+          kids.map(k => `${k.first||''} (${k.age||''} ${lang==='he'?'שנים':'ans'})`).join(' | ')
+        );
+      }
+
+      const EMAIL_TO = 'amzallaghillel@gmail.com';
+      const subject  = encodeURIComponent('RSVP — Natanël & Ora');
+      const bodyTxt  = encodeURIComponent(lines.join('\n'));
+      window.location.href = `mailto:${EMAIL_TO}?subject=${subject}&body=${bodyTxt}`;
+      if (okMsg) okMsg.style.display = 'block';
+      lockForm();
+    }
+  });
+
+  /* ---------- Switch langue ---------- */
   function setLang(lang){
     const P=(lang==='he')?HE:FR;
-    document.documentElement.setAttribute('data-lang', lang);
+
+    root.setAttribute('data-lang', lang);
     document.documentElement.setAttribute('lang', lang==='he'?'he':'fr');
     document.documentElement.setAttribute('dir',  lang==='he'?'rtl':'ltr');
-    document.body.classList.toggle('he-mode', lang==='he');
-    document.getElementById('houppa-soiree')?.classList.toggle('he-mode', lang==='he');
-    document.getElementById('formulaire')?.classList.toggle('he-mode', lang==='he');
+    body.classList.toggle('he-mode', lang==='he');
+    card?.classList.toggle('he-mode', lang==='he');
+    rsvp?.classList.toggle('he-mode', lang==='he');
 
-    el.enterBtn && (el.enterBtn.textContent=P.enterBtn, el.enterBtn.dir=(lang==='he')?'rtl':'ltr');
+    if(el.enterBtn){ el.enterBtn.textContent=P.enterBtn; el.enterBtn.dir=(lang==='he')?'rtl':'ltr'; }
+
     setHero(P); setCountdownLabels(P); setNames(P);
 
-    el.houppaTitle   && (el.houppaTitle.innerHTML   = P.houppaTitle);
-    el.invitationTop && (el.invitationTop.innerHTML = P.invitationTop);
-    el.invitationBottom && (el.invitationBottom.innerHTML = P.invitationBottom);
+    if(el.houppaTitle)   el.houppaTitle.innerHTML   = P.houppaTitle;
+    if(el.invitationTop) el.invitationTop.innerHTML = P.invitationTop;
+    if(el.invitationBottom) el.invitationBottom.innerHTML = P.invitationBottom;
 
     if (el.reception){
-      if (P.reception && P.reception.trim()){
-        el.reception.textContent = P.reception; el.reception.style.display = '';
-      } else { el.reception.textContent = ''; el.reception.style.display = 'none'; }
+      if (P.reception && P.reception.trim()){ el.reception.textContent = P.reception; el.reception.style.display = ''; }
+      else { el.reception.textContent = ''; el.reception.style.display = 'none'; }
     }
 
-    el.placeLine && (el.placeLine.innerHTML = P.placeLine);
-    el.timings   && (el.timings.innerHTML   = P.timings);
-    el.dedic     && (el.dedic.innerHTML     = P.dedic);
+    if(el.placeLine) el.placeLine.innerHTML = P.placeLine;
+    if(el.timings)   el.timings.innerHTML   = P.timings;
+    if(el.dedic)     el.dedic.innerHTML     = P.dedic;
 
     setParents(el.leftLines,  P.parentsLeft);
     setParents(el.rightLines, P.parentsRight);
 
-    el.navAccueil && (el.navAccueil.textContent=P.nav.accueil);
-    el.navHouppa  && (el.navHouppa.textContent =P.nav.houppa);
-    el.navRSVP    && (el.navRSVP.textContent   =P.nav.rsvp);
+    if(el.navAccueil) el.navAccueil.textContent=P.nav.accueil;
+    if(el.navHouppa)  el.navHouppa.textContent =P.nav.houppa;
+    if(el.navRSVP)    el.navRSVP.textContent   =P.nav.rsvp;
 
-    el.calBtn  && (el.calBtn.textContent  = (lang==='he') ? '📅 הוסף ליומן' : '📅 Ajouter au calendrier');
-    el.wazeBtn && (el.wazeBtn.textContent = (lang==='he') ? 'פתח ב־Waze'   : 'Ouvrir dans Waze');
+    if(el.calBtn)  el.calBtn.textContent  = (lang==='he') ? '📅 הוסף ליומן' : '📅 Ajouter au calendrier';
+    if(el.wazeBtn) el.wazeBtn.textContent = (lang==='he') ? 'פתח ב־Waze'   : 'Ouvrir dans Waze';
 
     setRSVP(P);
 
