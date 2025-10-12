@@ -296,6 +296,8 @@ document.addEventListener('DOMContentLoaded', function () {
     assahaLabel: document.querySelector('#assaha label'),
     assahaYes:   document.querySelector('input[name="assaha"][value="1"]')?.parentElement,
     assahaNo:    document.querySelector('input[name="assaha"][value="0"]')?.parentElement,
+    kidsYes: document.querySelector('input[name="has_kids"][value="1"]')?.parentElement,
+    kidsNo:  document.querySelector('input[name="has_kids"][value="0"]')?.parentElement,
     citySelect:  citySelect,
     hint1:       document.querySelector('.form-hint'),
     hint2:       document.getElementById('preventive_message_2'),
@@ -348,7 +350,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if(el.lastName)  el.lastName.placeholder=t.last;
     if(el.email)     el.email.placeholder=t.email;
     if(el.tel)       el.tel.placeholder=t.tel;
-
+     
     if(el.presenceSel){
       el.presenceSel.options.length=0;
       el.presenceSel.add(new Option(t.presenceLabel,'',true,true));
@@ -378,7 +380,15 @@ document.addEventListener('DOMContentLoaded', function () {
         el.citySelect.add(new Option(t.cityAshdod, 'ashdod'));
         el.citySelect.add(new Option(t.cityJerusalem, 'jerusalem'));
      }
-
+     // Enfants: Oui/Non selon la langue
+     if (el.kidsYes) {
+        const lab = el.kidsYes.querySelector('label');
+        if (lab?.lastChild) lab.lastChild.nodeValue = ' ' + t.yes;    // HE: כן / FR: Oui
+     }
+     if (el.kidsNo) {
+        const lab = el.kidsNo.querySelector('label');
+        if (lab?.lastChild) lab.lastChild.nodeValue  = ' ' + t.no;     // HE: לא / FR: Non
+     }
     if(el.hint1) el.hint1.textContent=t.hint1;
     if(el.hint2) el.hint2.textContent=t.hint2 || '';
     if(el.successMsg) el.successMsg.textContent=t.success;
