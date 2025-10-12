@@ -576,6 +576,17 @@ body.he-mode .fr-only { display: none; }
 
 /* HE : éviter le retour à la ligne entre "7" et "בינואר 2026" si tu l'utilises */
 .no-wrap-he { white-space: nowrap; display: inline-block; }
+    /* Arc hébreu en cercle */
+.arc{
+  direction: rtl;           /* Bidi correct */
+  unicode-bidi: isolate;    /* évite les interférences LTR/RTL autour */
+  white-space: nowrap;      /* pas de coupure au milieu des mots */
+  font-family: "Noto Serif Hebrew", serif;
+  font-weight: 600;
+  letter-spacing: .02em;
+  text-align: center;
+}
+
   </style>
 </head>
 
