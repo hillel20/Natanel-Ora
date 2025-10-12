@@ -453,7 +453,7 @@ html[data-lang="fr"], body[data-lang="fr"] { direction: ltr; }
 
 /* ---------- Titre en arc + sous-titre ---------- */
 #arc-title {
-  letter-spacing: 3px !important;/* espace horizontal entre les lettres */
+  letter-spacing: 1px !important;/* espace horizontal entre les lettres */
   font-weight: 500; /* garde une belle finesse */
   direction: rtl; /* pour être sûr que l’hébreu s’aligne bien */
 }
