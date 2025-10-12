@@ -619,7 +619,11 @@ document.addEventListener('DOMContentLoaded', function () {
     payload.kids_count = payload.kids_count || kids.length;
 
     try {
-      const res = await fetch(SHEET_WEBAPP_URL, { method: 'POST', body: JSON.stringify(payload) });
+     const res = await fetch(SHEET_WEBAPP_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+     });
       const text = await res.text();
       let j = {}; try { j = JSON.parse(text); } catch {}
       if (res.ok && j.ok !== false) {
