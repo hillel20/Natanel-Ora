@@ -393,7 +393,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if(el.hint2) el.hint2.textContent=t.hint2 || '';
     if(el.successMsg) el.successMsg.textContent=t.success;
     setSubmitLabel(t.submit);
-
+     
     // Message placeholder
     const messageTa = document.querySelector('textarea[name="message"]');
     if (messageTa) messageTa.placeholder = t.message;
@@ -432,6 +432,15 @@ document.addEventListener('DOMContentLoaded', function () {
       if (a) a.placeholder = t.kidAge(i);
     });
   }
+// --- Force la traduction de "Oui/Non" dans les zones toggle ---
+function translateYesNoIn(container, yesTxt, noTxt){
+  if (!container) return;
+  container.querySelectorAll('label, span, .toggle-label').forEach(el=>{
+    const t = el.textContent.trim().toLowerCase();
+    if (t === 'oui' || t === 'yes') el.textContent = yesTxt;
+    if (t === 'non' || t === 'no')  el.textContent = noTxt;
+  });
+}
 
   /* ---------- UI toggles ---------- */
   const togglePresence = () => {
@@ -645,7 +654,8 @@ document.addEventListener('DOMContentLoaded', function () {
   /* ---------- Switch langue ---------- */
   function setLang(lang){
     const P=(lang==='he')?HE:FR;
-
+    translateYesNoIn(document.getElementById('assaha'),          P.rsvp.yes, P.rsvp.no);
+    translateYesNoIn(document.getElementById('childrenSection'), P.rsvp.yes, P.rsvp.no);
     root.setAttribute('data-lang', lang);
     document.documentElement.setAttribute('lang', lang==='he'?'he':'fr');
     document.documentElement.setAttribute('dir',  lang==='he'?'rtl':'ltr');
