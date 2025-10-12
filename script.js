@@ -433,13 +433,27 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 // --- Force la traduction de "Oui/Non" dans les zones toggle ---
-function translateYesNoIn(container, yesTxt, noTxt){
+// Remplace tous les "Oui/Non" (ou Yes/No) trouvés dans un conteneur
+function replaceYesNo(container, yesTxt, noTxt){
   if (!container) return;
-  container.querySelectorAll('label, span, .toggle-label').forEach(el=>{
-    const t = el.textContent.trim().toLowerCase();
-    if (t === 'oui' || t === 'yes') el.textContent = yesTxt;
-    if (t === 'non' || t === 'no')  el.textContent = noTxt;
+  container.querySelectorAll('label, span, div, p, .toggle-label').forEach(el=>{
+    const raw = (el.textContent || '').trim().toLowerCase();
+    if (!raw) return;
+    if (raw === 'oui' || raw === 'yes') el.textContent = yesTxt;
+    if (raw === 'non' || raw === 'no')  el.textContent = noTxt;
   });
+}
+
+// Repère automatiquement le bloc autour d’un groupe radio (assaha / has_kids)
+// et y remplace tous les Oui/Non visibles.
+function forceYesNoForGroup(inputName, yesTxt, noTxt){
+  const inputs = document.querySelectorAll(`input[name="${inputName}"]`);
+  if (!inputs.length) return;
+  // on remonte sur un conteneur raisonnable
+  const container =
+    inputs[0].closest('#assaha, #childrenSection, .field, .form-group, .row, form') ||
+    inputs[0].parentElement;
+  replaceYesNo(container, yesTxt, noTxt);
 }
 
   /* ---------- UI toggles ---------- */
