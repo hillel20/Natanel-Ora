@@ -530,7 +530,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   /* ---------- Envoi → Google Sheets + fallback mail ---------- */
-  const SHEET_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwgw4c57UJjosu4z9bDBZC9lWYNx_zv8KqlTNKANddun_xtjszkZIxFUNtNohgDCXZ2/exec';
+  const SHEET_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwFEThuN9bVKdCaFiosDTkVFCAokvCcy7LqarvQu1zuHxnaa_tiS4idtXU5PYxObuEK/exec';
 
   function pack(){ return (document.documentElement.getAttribute('data-lang') === 'he') ? HE : FR; }
   function showError(msg){
