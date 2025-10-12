@@ -576,7 +576,6 @@ body.he-mode .fr-only { display: none; }
 
 /* HE : éviter le retour à la ligne entre "7" et "בינואר 2026" si tu l'utilises */
 .no-wrap-he { white-space: nowrap; display: inline-block; }
-
   </style>
 </head>
 
@@ -831,12 +830,22 @@ body.he-mode .fr-only { display: none; }
   <script defer src="script.js"></script>
   <script>
     // Init AOS
-    document.addEventListener('DOMContentLoaded', () => {
-      if (window.AOS) AOS.init();
-      // Arc hébreu
-      const arc = document.getElementById('arc-title');
-      if (arc && window.CircleType) new CircleType(arc).radius(600);
-    });
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.AOS) AOS.init();
+
+  const arc = document.getElementById('arc-title');
+  if (arc && window.CircleType) {
+    // une seule instance, en sens "RTL" visuel
+    const ct = new CircleType(arc).dir(-1);
+    const setRadius = () => {
+      const w = window.innerWidth;
+      ct.radius(w >= 992 ? 600 : w >= 560 ? 360 : 280);
+    };
+    setRadius();
+    window.addEventListener('resize', setRadius);
+  }
+});
+
   </script>
 </body>
 </html>
