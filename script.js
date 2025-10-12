@@ -617,7 +617,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     payload.kids = kids;
     payload.kids_count = payload.kids_count || kids.length;
-
+   
+    console.log('Payload envoyé à Google Script:', payload); // 👈 ajoute cette ligne ici
     try {
      const res = await fetch(SHEET_WEBAPP_URL, {
         method: 'POST',
@@ -633,6 +634,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       throw new Error(`HTTP ${res.status} ${text}`);
     } catch (err) {
+      console.error('Erreur fetch vers Google Script:', err);
       const lang = (payload.lang === 'he') ? 'he' : 'fr';
       const cityMap = (lang === 'he')
         ? { ashdod:'אשדוד', jerusalem:'ירושלים' }
