@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function () {
     countdown: { days: 'ימים', hours: 'שעות', minutes: 'דקות', seconds: 'שניות' },
     houppaTitle: 'חופה',
     invitationTop: 'מודים לה׳ על הזכות לשמוח ולהזמינכם<br>לחתונת ילדיהם ונכדיהם,',
-    invitationBottom: 'בחופה שתתקיים בע״ה ביום <span class="accent"><strong>7 בינואר 2026</strong></span> — <span class="accent"><strong>י״ח בטבת תשפ״ו</strong></span>.',
+    invitationBottom: 'בחופה שתתקיים בע״ה ביום <span class="accent"><strong>7 בינואר 2026</strong></span> — <span class="accent"><strong>י״ח בטבת תשפ״ו</span>.',
     reception: '',
     placeLine:  'אמרלד — הגן השקוף · בית שמש, ישראל',
     timings:    '<span class="accent">קבלת פנים 17:45</span> · <span class="accent">חופה 18:45 בדיוק</span>',
@@ -319,8 +319,6 @@ document.addEventListener('DOMContentLoaded', function () {
   function setLabelTextSafe(labelEl, text, withLeadingSpace = true) {
     if (!labelEl) return;
     const desired = withLeadingSpace ? (' ' + text) : text;
-
-    // Cherche un nœud texte existant en fin
     let textNode = null;
     const nodes = Array.from(labelEl.childNodes);
     for (let i = nodes.length - 1; i >= 0; i--) {
@@ -333,15 +331,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // Traduction Oui/Non sans écraser l’intérieur des labels
   function translateYesNoIn(container, yesTxt, noTxt){
     if (!container) return;
     container.querySelectorAll('label').forEach(lab => {
-      // On lit le texte "visible" (sans casser la structure) et on décide
       const raw = (lab.textContent || '').trim().toLowerCase();
       if (raw === 'oui' || raw === 'yes') setLabelTextSafe(lab, yesTxt, true);
       if (raw === 'non' || raw === 'no')  setLabelTextSafe(lab, noTxt,  true);
-      // Si ce sont déjà des radios stylés (input puis texte), on met à jour quand même le dernier nœud texte
       if (lab.querySelector('input[type="radio"]')) {
         const val = lab.querySelector('input[type="radio"]').value;
         if (val === '1') setLabelTextSafe(lab, yesTxt, true);
@@ -407,7 +402,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if(el.assahaLabel) el.assahaLabel.textContent=t.shuttle;
 
-    // ✅ radios : on met à jour le TEXTE du label sans détruire l’input
     if (el.assahaYes) {
       const lab = el.assahaYes.querySelector('label');
       if (lab) setLabelTextSafe(lab, t.yes, true);
@@ -425,7 +419,6 @@ document.addEventListener('DOMContentLoaded', function () {
       el.citySelect.add(new Option(t.cityJerusalem, 'jerusalem'));
     }
 
-    // Enfants: Oui/Non via setter SAFE
     if (el.kidsYes) {
       const lab = el.kidsYes.querySelector('label');
       if (lab) setLabelTextSafe(lab, t.yes, true);
@@ -537,7 +530,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   /* ---------- Envoi → Google Sheets + fallback mail ---------- */
-  const SHEET_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxhLtwjLosdU8xKbeSSfK0q0cm0smEY1nsl1N16MqJvTruSJ5ZFuEsomYOBS4JrehLG/exec';
+  const SHEET_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwgw4c57UJjosu4z9bDBZC9lWYNx_zv8KqlTNKANddun_xtjszkZIxFUNtNohgDCXZ2/exec';
 
   function pack(){ return (document.documentElement.getAttribute('data-lang') === 'he') ? HE : FR; }
   function showError(msg){
@@ -617,16 +610,28 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     payload.kids = kids;
     payload.kids_count = payload.kids_count || kids.length;
-   
-    console.log('Payload envoyé à Google Script:', payload); // 👈 ajoute cette ligne ici
+
+    console.log('Payload envoyé à Google Script:', payload);
+
+    // --- ENVOI URL-ENCODED (pas de header Content-Type) ---
     try {
-     const res = await fetch(SHEET_WEBAPP_URL, {
+      // kids doit être stringifié pour GAS si on envoie en form-urlencoded
+      payload.kids = JSON.stringify(kids);
+
+      const params = new URLSearchParams();
+      Object.entries(payload).forEach(([k, v]) => {
+        if (v === undefined || v === null) return;
+        params.append(k, typeof v === 'object' ? JSON.stringify(v) : String(v));
+      });
+
+      const res = await fetch(SHEET_WEBAPP_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-     });
+        body: params
+      });
+
       const text = await res.text();
       let j = {}; try { j = JSON.parse(text); } catch {}
+
       if (res.ok && j.ok !== false) {
         if (okMsg) okMsg.style.display = 'block';
         lockForm();
@@ -635,6 +640,8 @@ document.addEventListener('DOMContentLoaded', function () {
       throw new Error(`HTTP ${res.status} ${text}`);
     } catch (err) {
       console.error('Erreur fetch vers Google Script:', err);
+
+      // --- Fallback mail (inchangé) ---
       const lang = (payload.lang === 'he') ? 'he' : 'fr';
       const cityMap = (lang === 'he')
         ? { ashdod:'אשדוד', jerusalem:'ירושלים' }
@@ -685,7 +692,6 @@ document.addEventListener('DOMContentLoaded', function () {
   function setLang(lang){
     const P=(lang==='he')?HE:FR;
 
-    // ✅ remplace le texte Oui/Non sans casser la structure
     translateYesNoIn(document.getElementById('assaha'),          P.rsvp.yes, P.rsvp.no);
     translateYesNoIn(document.getElementById('childrenSection'), P.rsvp.yes, P.rsvp.no);
 
