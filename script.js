@@ -537,7 +537,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   /* ---------- Envoi → Google Sheets + fallback mail ---------- */
-  const SHEET_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz1Qx7knSr0Vj24WEjc7LgDX04p_Wgdbp_Yu2Q-uoZRTbZV97MLtl-W0NBQ3ddhHNc2/exec';
+  const SHEET_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwSds9TRpF-UfkLsPLdqcnNwQ4ByhOg6bxrBxGvs-O6ZcoYuo6W3MwlSYXUZc5V2sHr/exec';
 
   function pack(){ return (document.documentElement.getAttribute('data-lang') === 'he') ? HE : FR; }
   function showError(msg){
