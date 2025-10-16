@@ -215,15 +215,34 @@
       enterBtn: 'לצפייה בהזמנה',
       countdown: { days: 'ימים', hours: 'שעות', minutes: 'דקות', seconds: 'שניות' },
       houppaTitle: 'חופה',
-      invitationTop: 'מודים לה׳ על הזכות לשמוח ולהזמינכם<br>לחתונת ילדיהם ונכדיהם,',
+      // 🔁 "ילדיהם ונכדיהם" → "ילדינו ונכדינו"
+      invitationTop: 'מודים לה׳ על הזכות לשמוח ולהזמינכם<br>לחתונת ילדינו ונכדינו,',
       invitationBottom: 'בחופה שתתקיים בע״ה ביום <span class="accent"><strong>7 בינואר 2026</strong></span> — <span class="accent"><strong>י״ח בטבת תשפ״ו</span>.',
       reception: '',
       placeLine:  'אמרלד — הגן השקוף · בית שמש, ישראל',
       timings:    '<span class="accent">קבלת פנים 17:45</span> · <span class="accent">חופה 18:45 בדיוק</span>',
-      dedic:      'אזכרה מיוחדת לסבינו היקרים: <br> גב׳ רות הרוש, מר סרג׳ יוסף תמם ומר שמואל חיים בזננו.',
-      parentsLeft:  ['מר וד״ר דוב ושרה הרוש','מר מיכאל הרוש','גב׳ אלין תמים'],
-      parentsRight: ['מר וגברת יוסף ונטלי בזננו','מר וגברת אדולף מַלְחוּף &amp; מרת מירייל טפיירו','גב׳ יסמין בזננו'],
+    
+      // 🔁 Texte de souvenir (sans noms, formulation demandée)
+      dedic: 'אזכרה מיוחדת לסבינו היקרים, אשר זכרם מלווה אותנו ביום שמחתנו:<br>רות הרוש, סרג׳ יוסף תמם, ושמואל חיים בסננו.',
+
+    
+      // 🔁 Listes de parents sans titres + corrections:
+      // - בזננו → בסננו
+      // - מיכאל → מרדכי
+      // - מַלְחוּף → מחלוף (sans נקודות)
+      parentsLeft: [
+        'דוב ושרה הרוש',
+        'מרדכי הרוש',
+        'אלין תמים'
+      ],
+      parentsRight: [
+        'יוסף ונטלי בסננו',
+        'אדולף מחלוף ומירייל טפיירו',
+        'יסמין בסננו'
+      ],
+    
       nav: { accueil: 'דף הבית', houppa: 'חופה', rsvp: 'אישור הגעה' },
+    
       rsvp: {
         title:'אשרו הגעה',
         first:'שם פרטי *', last:'שם משפחה *', email:'האימייל שלכם', tel:'טלפון *',
@@ -254,6 +273,7 @@
         }
       }
     };
+    
   
     /* ---------- DOM map for i18n ---------- */
     const root = document.documentElement;
