@@ -223,7 +223,8 @@
       timings:    '<span class="accent">קבלת פנים 17:45</span> · <span class="accent">חופה 18:45 בדיוק</span>',
     
       // 🔁 Texte de souvenir (sans noms, formulation demandée)
-      dedic: 'אזכרה מיוחדת לסבינו היקרים, אשר זכרם מלווה אותנו ביום שמחתנו:<br>רות הרוש, סרג׳ יוסף תמם, ושמואל חיים בסננו.',
+     dedic: 'אזכרה מיוחדת לסבינו היקרים, אשר זכרם מלווה אותנו ביום שמחתנו:<br>רות הרוש, סרג׳ יוסף תמים, ושמואל חיים בסננו.',
+
 
     
       // 🔁 Listes de parents sans titres + corrections:
